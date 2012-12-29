@@ -264,6 +264,7 @@ class SEManager {
         $content = $element->getContent();
         $element->set('static_file', $file_path);
         $element->set('static', true);
+		$element->set('source', '0');
         $element->setFileContent($content);
 
         if($element->save()){

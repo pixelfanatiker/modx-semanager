@@ -20,10 +20,6 @@
  * @package semanager
  */
 class SEManager {
-    /**
-     * @var string
-     */
-    public $elements_dir = '';
 
     public $modx = null;
 
@@ -54,12 +50,6 @@ class SEManager {
             'imgUrl' => $assetsUrl.'img/',
             'connectorUrl' => $assetsUrl.'connector.php',
 
-            'elements_dir' => $this->elements_dir = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/'),
-            'filename_tpl_chunk' => $this->elements_dir = $this->modx->getOption('semanager.filename_tpl_chunk', null, '{name}.ch.html'),
-            'filename_tpl_plugin' => $this->elements_dir = $this->modx->getOption('semanager.filename_tpl_plugin', null, '{name}.pl.php'),
-            'filename_tpl_snippet' => $this->elements_dir = $this->modx->getOption('semanager.filename_tpl_snippet', null, '{name}.sn.php'),
-            'filename_tpl_template' => $this->elements_dir = $this->modx->getOption('semanager.filename_tpl_template', null, '{name}.tp.html'),
-
             'default_filenames' => array(
                 'template'  => 'tp.html',
                 'plugin'    => 'pl.php',
@@ -73,27 +63,6 @@ class SEManager {
             $this->modx->lexicon->load('semanager:default');
         }
 
-        //$this->initDebug();
-    }
-
-    /**
-     * Load debugging settings
-     */
-    public function initDebug() {
-        if ($this->modx->getOption('debug',$this->config,false)) {
-            error_reporting(E_ALL); ini_set('display_errors',true);
-            $this->modx->setLogTarget('HTML');
-            $this->modx->setLogLevel(modX::LOG_LEVEL_ERROR);
-
-            $debugUser = $this->config['debugUser'] == '' ? $this->modx->user->get('username') : 'anonymous';
-            $user = $this->modx->getObject('modUser',array('username' => $debugUser));
-            if ($user == null) {
-                $this->modx->user->set('id',$this->modx->getOption('debugUserId',$this->config,1));
-                $this->modx->user->set('username',$debugUser);
-            } else {
-                $this->modx->user = $user;
-            }
-        }
     }
 
     /**
@@ -102,10 +71,10 @@ class SEManager {
      * @access public
      * @param string $ctx The context to load. Defaults to web.
      */
-    public function initialize($ctx="mgr"){
+    public function initialize($ctx='mgr'){
         $output = '';
         switch($ctx){
-            case "mgr":
+            case 'mgr':
                 if (!$this->modx->loadClass('semanager.request.SEManagerControllerRequest',$this->config['modelPath'],true,true)) {
                     return 'Could not load controller request handler.';
                 }
@@ -116,107 +85,226 @@ class SEManager {
         return $output;
     }
 
-    /**
-     * Make synchronization of all Elements
-     */
-    public function syncAll(){
+    public function checkNewFileForElement($file){
 
-        // TODO: перейти на переменную в config
-        $this->elements_dir = $this->config['elements_dir'];
+        $fn = array_reverse(explode('.', array_pop(explode('/',$file))));
 
-        if (!file_exists($this->elements_dir)){
-            $this->_makeDirs($this->elements_dir);
+        if(count($fn) <= 1) return false; // if file not have extension
+
+        $ext = implode('.', array_reverse(array_slice($fn, 0, 2))); // extension
+
+        $fnch = $this->modx->getOption('semanager.filename_tpl_chunk', null, 'ch.html');
+        if($ext === $fnch){
+            if(!is_object($this->modx->getObject('modChunk', array('static' => 1,'static_file' => $file)))){
+                return true;
+            }
         }
 
-        // 2. проверить настройку - использовать ли типы. если да, то создать папки нужные
-        $type_separation = $this->modx->getOption('semanager.type_separation', null, true);
-
-        if($type_separation){
-
-            $dirs = array(
-                'modTemplate' => $this->elements_dir . 'templates/',
-                'modChunk'    => $this->elements_dir . 'chunks/',
-                'modSnippet'  => $this->elements_dir . 'snippets/',
-                'modPlugin'   => $this->elements_dir . 'plugins/'
-            );
-
-            foreach($dirs as $type => $dir){
-                $this->_makeDirs($dir);
-                $this->manyElementsToStatic($type, $dir);
+        $fnpl = $this->modx->getOption('semanager.filename_tpl_plugin', null, 'pl.php');
+        if($ext === $fnpl){
+            if(!is_object($this->modx->getObject('modPlugin', array('static' => 1,'static_file' => $file)))){
+                return true;
             }
-
-        }else{
-
-            $types = array(
-                'modTemplate',
-                'modChunk',
-                'modSnippet',
-                'modPlugin'
-            );
-
-            foreach($types as $type){
-                $this->manyElementsToStatic($type);
-            }
-
         }
+
+        $fnsn = $this->modx->getOption('semanager.filename_tpl_snippet', null, 'sn.php');
+        if($ext === $fnsn){
+            if(!is_object($this->modx->getObject('modSnippet', array('static' => 1,'static_file' => $file)))){
+                return true;
+            }
+        }
+
+        $fntp = $this->modx->getOption('semanager.filename_tpl_template', null, 'tp.html');
+        if($ext === $fntp){
+            if(!is_object($this->modx->getObject('modTemplate', array('static' => 1,'static_file' => $file)))){
+                return true;
+            }
+        }
+
+        return false;
 
     }
 
-    public function oneElementToStatic($element, $path){
+    public function getNewFiles(){
 
+        $files = array();
+
+        foreach($this->scanElementsFolder() as $f){
+            if($this->checkNewFileForElement($f)){
+
+                $path = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/');
+                $type_separation = $this->modx->getOption('semanager.type_separation', null, true);
+                $use_categories = $this->modx->getOption('semanager.use_categories', null, true);
+
+                $category = 0;
+                $type = '0';
+
+                $file_path = array_reverse(explode('/',str_replace($path, '', $f)));
+
+                $filename = array_shift($file_path);
+
+                //$this->modx->log(E_ERROR, $filename);
+
+                // TODO: добавить дополнительно проверку, если файл не в папке вообще
+                if($type_separation){
+                    $type = array_pop($file_path);
+                    if($type == ''){
+                        $type = 0;
+                    }
+                }
+                //$type = ($type_separation)? array_pop($file_path) : 'None';
+
+                if($use_categories){
+                    $category = array_shift($file_path);
+                    if($category == ''){
+                        $category = 0;
+                    }
+                }
+
+                $files[] = array(
+                    'filename' => $filename,
+                    'category' => $category,
+                    'type' => $type,
+                    'path' => $f
+                );
+            }
+        }
+
+        return $files;
+
+    }
+
+    public function scanElementsFolder(){
+
+        $files = array();
+        $path = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/');
+
+        $this->_scanFolder($path, $files);
+
+        return $files;
+
+    }
+
+    private function _scanFolder($path, &$files) {
+        $d = dir($path);
+        while(false != ($e = $d->read())) {
+            if ($e != '.' and $e != '..'){
+                if(is_dir($d->path.$e)){
+                    $this->_scanFolder($d->path.$e.'/', &$files);
+                }else{
+                    $files[] = $d->path.$e;
+                }
+            }
+        }
+        $d->close();
+    }
+
+    /**
+     * Return type of Element (chunk, plugin, snippet or template)
+     *
+     * @param $element
+     * @return mixed
+     */
+    private function _getTypeOfElement($element){
+        $config = $this->modx->getConfig();
+        $dbtype = $config['dbtype'];
+        return str_replace(array($dbtype,'mod','_'), '', strtolower(get_class($element)));
+    }
+
+    /**
+     * Make and return full path to file with element's code
+     *
+     * @param $element
+     * @return mixed|string
+     */
+    private function _makePath($element){
+
+        $path = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/');
+        $type_separation = $this->modx->getOption('semanager.type_separation', null, true);
         $use_categories = $this->modx->getOption('semanager.use_categories', null, true);
 
-        if($use_categories){
+        if($type_separation){   // make subdirectories with name by element's type
+            $path .= $this->_getTypeOfElement($element).'s/';
+        }
 
+        if($use_categories){    // make subdirectories with category name
             $categories_map = $this->getCategoriesMap($element->category);
-
             if($categories_map != ''){
-
-                $path = $path . $categories_map . '/';
-                $this->_makeDirs($path);
-
+                $path .= $categories_map . '/';
             }
-
         }
 
-        // TODO: отрефакторить. учесть все возможные БД
-        $element_class = str_replace(array('_mysql','_sqlsrv'), '', get_class($element));
+        return $path;
 
-        $type = strtolower(str_replace('mod', '', $element_class));
+    }
 
-        $filename_tpl = $this->modx->getOption('semanager.filename_tpl_' . $type, null, '{name}.'.$this->config['default_filenames'][$type]);
+    /**
+     * Make static element. Create static file.
+     *
+     * @param $element
+     * @return bool
+     */
+    public function makeStaticElement($element){
 
-        if($element_class == 'modTemplate'){
-            $element->name = $element->templatename;
+        $path = $this->_makePath($element);
+        $type = $this->_getTypeOfElement($element);
+
+        $filename_tpl = $this->modx->getOption('semanager.filename_tpl_' . $type, null, '');
+
+        if($type == 'template'){
+            $file_path = $path . $element->templatename .'.'. $filename_tpl;
+        }else{
+            $file_path = $path . $element->name .'.'. $filename_tpl;
         }
 
-        $file_path = $path . str_replace('{name}', $element->name, $filename_tpl);
+        $this->_makeDirs(dirname($file_path));
 
         touch($file_path);
 
         $content = $element->getContent();
         $element->set('static_file', $file_path);
         $element->set('static', true);
+		$element->set('source', '0');
         $element->setFileContent($content);
 
         if($element->save()){
-            return true;
+            return $element;
+        }else{
+            return false;
         }
 
     }
 
-    public function manyElementsToStatic($class_name, $path = ''){
+    /**
+     * Unmake static element. Make dynamic element. Remove static file
+     *
+     * @param $element
+     * @return bool
+     */
+    public function unmakeStaticElement($element){
 
-        if($path == ''){
-            $path = $this->elements_dir;
+        $file_name = $element->get('static_file');
+
+        $content = $element->getContent();
+        $element->set('static_file', '');
+        $element->set('static', false);
+        $element->setContent($content);
+
+        if($element->save()){
+            unlink($file_name);
+            return $element;
+        }else{
+            return false;
         }
+
+    }
+
+    public function manyElementsToStatic($class_name){
 
         $elements = $this->modx->getCollection($class_name);
 
         foreach($elements as $element){
-
-            $this->oneElementToStatic($element, $path);
-
+            $this->makeStaticElement($element);
         }
 
     }
@@ -229,26 +317,22 @@ class SEManager {
      * @param array $category_list
      */
     private function _findAllParents($id, array $parents, array $category_list){
-
         $parents[] = $category_list[$id]['name'];
-
         $parent = $category_list[$id]['parent'];
-
         if($parent != 0){
             $this->_findAllParents($parent, &$parents, $category_list);
         }
     }
 
     /**
-     * Get all categories as map for filesistem
+     * Get all categories as map for filesystem
+     *
      * @param $id_category
      * @return string
      */
     public function getCategoriesMap($id_category){
 
-        if($id_category == 0){
-            return '';
-        }
+        if($id_category == 0) return '';
 
         // get all categories
         $categories = $this->modx->getCollection('modCategory');
@@ -280,7 +364,5 @@ class SEManager {
         if (!$this->_makeDirs($pStrPath)) return false;
         return @mkdir($strPath);
     }
-
-
 
 }

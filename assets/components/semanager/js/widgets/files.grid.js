@@ -1,4 +1,4 @@
-SEManager.grid.Elements = function(config) {
+SEManager.grid.Files = function(config) {
     config = config || {};
 
     this.exp = new Ext.grid.RowExpander({
@@ -9,17 +9,25 @@ SEManager.grid.Elements = function(config) {
 
     if (!config.tbar) {
         config.tbar = [{
-            text: _('quick_create_'+config.type)
-            ,handler: {
-                xtype: 'modx-window-quick-create-'+config.type
-                ,blankValues: true
+            xtype: 'button'
+            ,text: 'Создать элементы из файлов'
+            ,icon: MODx.config.template_url + 'images/restyle/icons/elements.png'
+            ,cls:'x-btn-text-icon'
+            ,style: {
+                paddingLeft: '5px'
+                ,float: 'left'
+                ,marginRight: '20px'
             }
+            //,handler: {
+            //    xtype: 'modx-window-quick-create-'+config.type
+            //    ,blankValues: true
+            //}
         }];
     }
     config.tbar.push('->',{
         xtype: 'modx-combo'
         ,name: 'filter_category'
-        ,id: 'semanager-filter-category'+config.type
+        ,id: 'semanager-filter-category-files'
         ,emptyText: _('semanager.elements.filter_by_category')
         ,fields: ['id','category']
         ,displayField: 'category'
@@ -37,7 +45,7 @@ SEManager.grid.Elements = function(config) {
     },'-',{
         xtype: 'textfield'
         ,name: 'filter_name'
-        ,id: 'semanager-filter-name-'+config.type
+        ,id: 'semanager-filter-name-files'
         ,emptyText: _('semanager.elements.filter_by_name')+'...'
         ,listeners: {
             'change': {fn: this.filterByName, scope: this}
@@ -51,44 +59,35 @@ SEManager.grid.Elements = function(config) {
         }
     },{
         xtype: 'button'
-        ,id: 'semanager-filter-clear-'+config.type
+        ,id: 'semanager-filter-clear-files'
         ,text: _('filter_clear')
         ,handler: this.clearFilter
     });
 
-    /*
-    var ec = new Ext.ux.grid.CheckColumn({
-        header: _('semanager.elements.static')
-        ,dataIndex: 'static'
-        ,editable: false
-        ,width: 20
-        ,sortable: true
-    });
-    */
-
     this.cm = new Ext.grid.ColumnModel({
         columns: [this.exp,{
-            header: _('id')
-            ,dataIndex: 'id'
-            ,width: 15
-        },{
             header: _('name')
-            ,dataIndex: (config.type=='template')?'templatename':'name'
-            ,width: 50
-            ,sortable: true
-            ,sortDir: 'ASC'
-        },{
-            header: _('semanager.elements.file')
-            ,dataIndex: 'static_file'
-            ,sortable: false
-            ,editable: false
-        },{
-            header: _('semanager.elements.static')
-            ,dataIndex: 'static'
+            ,dataIndex: 'filename'
             ,width: 30
             ,sortable: true
-            ,editable: true
-            ,renderer: this.renderDynField.createDelegate(this,[this],true)
+        },{
+            header: _('category')
+            ,dataIndex: 'category'
+            ,width: 30
+            ,sortable: true
+            ,renderer: this.categoryRender
+        },{
+            header: _('type')
+            ,dataIndex: 'type'
+            ,width: 30
+            ,sortable: false
+            ,editable: false
+            ,renderer: this.typeRender
+        },{
+            header: _('path')
+            ,dataIndex: 'path'
+            ,sortable: false
+            ,editable: false
         }]
         ,tools: [{
             id: 'plus'
@@ -107,7 +106,7 @@ SEManager.grid.Elements = function(config) {
         ,getCellEditor: function(colIndex, rowIndex) {
             var field = this.getDataIndex(colIndex);
             if (field == 'static') {
-                //var rec = config.store.getAt(rowIndex);
+                var rec = config.store.getAt(rowIndex);
                 var o = MODx.load({
                     xtype: 'combo-boolean'
                 });
@@ -120,21 +119,19 @@ SEManager.grid.Elements = function(config) {
 
     Ext.applyIf(config,{
         cm: this.cm
-        ,fields: ['id','name','static','static_file', 'description','category','snippet','plugincode','templatename','content','disabled']
-        ,id: 'semanager-grid-elements-' + config.type + 's'
+        ,fields: ['filename','category','type', 'path']
+        ,id: 'semanager-grid-elements-files'
         ,url: SEManager.config.connectorUrl
         ,baseParams: {
-            action: 'elements/getlist'
-            ,type: config.type
+            action: 'files/getlist'
         }
         ,clicksToEdit: 2
         ,autosave: true
-        ,save_action: 'elements/updatefromgrid'
+        ,save_action: 'files/updatefromgrid'
         ,plugins: this.exp
         ,autoHeight: true
         ,paging: true
-        //,remoteSort: true
-        ,remoteSort: false
+        ,remoteSort: true
         ,listeners: {
             'afterAutoSave': {fn:function() {
                 this.refresh();
@@ -143,12 +140,35 @@ SEManager.grid.Elements = function(config) {
                 e.record.data.type = config.type;
             }}
         }
-    });
-    SEManager.grid.Elements.superclass.constructor.call(this, config);
-};
-Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
 
-    renderDynField: function(v,md,rec,ri,ci,s,g) {
+
+    });
+    SEManager.grid.Files.superclass.constructor.call(this, config);
+};
+Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
+
+    typeRender: function(r) {
+
+        if(r == 0){
+            return 'no_type';
+        }
+
+        return r;
+
+        //return _(r.slice(0,-1))
+    }
+
+    ,categoryRender: function(r) {
+
+        //console.log(r);
+
+        if(r == 0){
+            return _('no_category');
+        }
+        return r;
+    }
+
+    ,renderDynField: function(v,md,rec,ri,ci,s,g) {
         var r = s.getAt(ri).data;
         var f,idx;
         var oz = v;
@@ -217,17 +237,54 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         this.getBottomToolbar().changePage(1);
         this.refresh();
     }
-    ,getMenu: function() {
+    ,getMenu: function(r) {
+
+
+        console.log(r);
+
         var m = [];
         m.push({
-            text: _('quick_update_' + this.config.type)
-            ,handler: this.updateElement
+            text: 'Make Element from File'
+            ,handler: this.makeElement
         });
         this.addContextMenuItem(m);
     }
-    ,updateElement: function(btn,e){
+    ,makeElement: function(btn,e){
         var r = this.menu.record;
         r.clearCache = 1;
+
+        if(r.type == null){
+            MODx.msg.confirm({
+                title: 'Выберите тип элемента'
+                ,text: 'context_remove_confirm'
+                //,url: MODx.config.connectors_url+'context/index.php'
+                //,params: {
+                //    action: 'remove'
+                //   ,key: key
+                //}
+                //,listeners: {
+                //    'success': {fn:function() {this.refresh();},scope:this}
+                //}
+            });
+            //alert('dfdfasdf');
+        }
+
+        console.log(r);
+
+        Ext.Ajax.request({
+            url: SEManager.config.connectorUrl
+            ,success: function(response) {
+                console.log(response);
+                //p.setValue(response.responseText);
+                //p.enable();
+            }
+            ,params: {
+                action: 'files/makeelement'
+                ,element: r
+            }
+        });
+
+        /*
         var que = MODx.load({
             xtype: 'modx-window-quick-update-' + this.config.type
             ,record: r
@@ -238,13 +295,11 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
                 },scope:this}
             }
         });
-        que.reset();
-        que.setValues(r);
-        que.show(e.target);
+        */
+        //que.reset();
+        //que.setValues(r);
+        //que.show(e.target);
     }
 });
 
-Ext.reg('semanager-grid-elements-chunks', SEManager.grid.Elements);
-Ext.reg('semanager-grid-elements-plugins', SEManager.grid.Elements);
-Ext.reg('semanager-grid-elements-snippets', SEManager.grid.Elements);
-Ext.reg('semanager-grid-elements-templates', SEManager.grid.Elements);
+Ext.reg('semanager-grid-files', SEManager.grid.Files);

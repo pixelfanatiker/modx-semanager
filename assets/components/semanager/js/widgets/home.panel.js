@@ -70,7 +70,7 @@ SEManager.panel.Home = function(config) {
                     bodyCssClass: 'main-wrapper'
                     ,border: false
                     ,items: [{
-                        xtype: 'semanager-grid-elements-plugins'
+                        xtype: 'semanager-grid-files'
                     }]
                 }]
             },{

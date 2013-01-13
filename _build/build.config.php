@@ -2,11 +2,13 @@
 /**
 * Define the MODX path constants necessary for core installation
 *
-* @package quip
+* @package semanager
 * @subpackage build
 */
 
-define('MODX_BASE_PATH', '/home/alroniks/dev/revolution/');
+include_once dirname(dirname(__FILE__)) . '/config.core.php';
+
+//define('MODX_BASE_PATH', '/home/alroniks/dev/revolution/');
 define('MODX_CORE_PATH', MODX_BASE_PATH . 'core/');
 define('MODX_MANAGER_PATH', MODX_BASE_PATH . 'manager/');
 define('MODX_CONNECTORS_PATH', MODX_BASE_PATH . 'connectors/');

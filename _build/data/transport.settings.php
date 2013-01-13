@@ -10,17 +10,17 @@ $settings = array();
 
 $settings[0]= $modx->newObject('modSystemSetting');
 $settings[0]->fromArray(array(
-'key' => 'semanager.elements_dir',
-'value' => '{assets_path}elements/',
-'xtype' => 'textfield',
-'namespace' => 'semanager',
-'area' => 'Files',
+    'key' => 'semanager.elements_dir',
+    'value' => '{assets_path}elements/',
+    'xtype' => 'textfield',
+    'namespace' => 'semanager',
+    'area' => 'Files',
 ),'',true,true);
 
 $settings[1]= $modx->newObject('modSystemSetting');
 $settings[1]->fromArray(array(
     'key' => 'semanager.filename_tpl_chunk',
-    'value' => '{name}.ch.html',
+    'value' => 'ch.html',
     'xtype' => 'textfield',
     'namespace' => 'semanager',
     'area' => 'Files',
@@ -29,7 +29,7 @@ $settings[1]->fromArray(array(
 $settings[2]= $modx->newObject('modSystemSetting');
 $settings[2]->fromArray(array(
     'key' => 'semanager.filename_tpl_plugin',
-    'value' => '{name}.pl.html',
+    'value' => 'pl.html',
     'xtype' => 'textfield',
     'namespace' => 'semanager',
     'area' => 'Files',
@@ -38,7 +38,7 @@ $settings[2]->fromArray(array(
 $settings[3]= $modx->newObject('modSystemSetting');
 $settings[3]->fromArray(array(
     'key' => 'semanager.filename_tpl_snippet',
-    'value' => '{name}.sn.html',
+    'value' => 'sn.html',
     'xtype' => 'textfield',
     'namespace' => 'semanager',
     'area' => 'Files',
@@ -47,7 +47,7 @@ $settings[3]->fromArray(array(
 $settings[4]= $modx->newObject('modSystemSetting');
 $settings[4]->fromArray(array(
     'key' => 'semanager.filename_tpl_template',
-    'value' => '{name}.tp.html',
+    'value' => 'tp.html',
     'xtype' => 'textfield',
     'namespace' => 'semanager',
     'area' => 'Files',

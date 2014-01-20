@@ -17,7 +17,7 @@
  * SE Manager; if not, write to the Free Software Foundation, Inc., 59 Temple
  * Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * miniShop Connector
+ * SE Manager Connector
  * @package semanager
  */
 
@@ -32,7 +32,7 @@ $modx->semanager = new SEManager($modx);
 $modx->lexicon->load('semanager:default');
 
 /* handle request */
-$path = $modx->getOption('processorsPath',$modx->semanager->config,$corePath.'processors/');
+$path = $modx->getOption('processorsPath', $modx->semanager->config, $corePath.'processors/');
 $modx->request->handleRequest(array(
     'processors_path' => $path,
     'location' => '',

@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * SE Manager
  *
  * Copyright 2012 by Ivan Klimchuk <ivan@klimchuk.com>
@@ -19,14 +18,17 @@
  * Place, Suite 330, Boston, MA 02111-1307 USA
  *
  * @package semanager
- * @subpackage lexicon
- *
- **/
-$_lang['semanager.title'] = 'SE Manager';
-$_lang['semanager.description'] = 'Manager for extra control of Static Elements';
+ */
 
-$_lang['semanager.common_settings'] = "Common settings";
+require_once dirname(__FILE__) . '/model/semanager/semanager.class.php';
+require_once dirname(__FILE__) . '/controllers/MainController.class.php';
 
-
-
-$_lang['semanager.no_permission'] = 'Not permission';
+/**
+ * @package semanager
+ * @subpackage controllers
+ */
+class HomeManagerController extends SEManagerManagerController {
+    public static function getDefaultController() {
+        return 'HomeController';
+    }
+}

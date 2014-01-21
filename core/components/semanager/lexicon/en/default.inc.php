@@ -1,9 +1,8 @@
 <?php
-/**
- *
+/*
  * SE Manager
  *
- * Copyright 2012 by Ivan Klimchuk <ivan@klimchuk.com>
+ * Copyright 2012 by LOVATA Group <info@lovata.com>
  *
  * SE Manager is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -21,12 +20,9 @@
  * @package semanager
  * @subpackage lexicon
  *
- **/
+ */
+ 
 $_lang['semanager.title'] = 'SE Manager';
 $_lang['semanager.description'] = 'Manager for extra control of Static Elements';
-
 $_lang['semanager.common_settings'] = "Common settings";
-
-
-
 $_lang['semanager.no_permission'] = 'Not permission';

@@ -1,9 +1,8 @@
 <?php
-/**
- *
+/*
  * SE Manager
  *
- * Copyright 2012 by Ivan Klimchuk <ivan@klimchuk.com>
+ * Copyright 2012 by LOVATA Group <info@lovata.com>
  *
  * SE Manager is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -21,7 +20,8 @@
  * @package semanager
  * @subpackage lexicon
  *
- **/
+ */
+ 
 $_lang['semanager.title'] = 'SE Manager';
 $_lang['semanager.description'] = 'Модуль для расширенного контроля статических элементов';
 
@@ -29,6 +29,7 @@ $_lang['semanager.tabs.actions'] = "Действия";
 $_lang['semanager.tabs.actions.desc'] = "Описание действия";
 $_lang['semanager.tabs.settings'] = "Настройки";
 $_lang['semanager.tabs.settings.desc'] = "Описание настройки";
+
 //-- chunks, plugins, shippets, templates - default in core lexicon
 
 $_lang['semanager.common.actions.alltofiles'] = "Все в файлы";
@@ -70,7 +71,6 @@ $_lang['semanager.elements.file'] = "Файл элемента";
 $_lang['semanager.elements.make_static_file'] = "Сделать статичным";
 $_lang['semanager.elements.remove_static_file'] = "Удалить статичный файл";
 $_lang['semanager.elements.exclude_element'] = "Исключить элемент";
-
 
 $_lang['semanager.no_permission'] = 'Нет доступа';
 

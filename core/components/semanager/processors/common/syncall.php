@@ -31,4 +31,3 @@ if (!$modx->hasPermission('view')) {return $this->failure($modx->lexicon('semana
 $rrr = $modx->getOption('root', $_REQUEST, '');
 
 $modx->semanager->syncAll();
-

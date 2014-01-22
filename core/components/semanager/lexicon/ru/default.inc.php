@@ -23,7 +23,7 @@
  */
  
 $_lang['semanager.title'] = 'SE Manager';
-$_lang['semanager.description'] = 'Модуль для расширенного контроля статических элементов';
+$_lang['semanager.description'] = 'Модуль расширенного контроля статических элементов';
 $_lang['semanager.sync.description'] = "Синхронизирует все элементы и сканирует папку на наличие новых файлов";
 
 //-- chunks, plugins, shippets, templates - default in core lexicon

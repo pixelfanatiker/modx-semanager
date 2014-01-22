@@ -184,6 +184,3 @@ $totalTime= sprintf("%2.4f s", $totalTime);
 $modx->log(modX::LOG_LEVEL_INFO,"\nPackage Built.\nExecution time: {$totalTime}\n");
 
 exit ();
-
-
-

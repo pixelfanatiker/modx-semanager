@@ -1,5 +1,10 @@
 Changelog for SE Manager.
 
+0.1.0 beta1 (January 22, 2014)
+================================
+- Add full english translation
+- Code cleaning
+
 0.1.0 alpha1 (February 25, 2012)
 ================================
 - First public release

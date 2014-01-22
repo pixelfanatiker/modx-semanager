@@ -27,7 +27,7 @@ $_lang['semanager.description'] = 'Модуль для расширенного 
 $_lang['semanager.sync.description'] = "Синхронизирует все элементы и сканирует папку на наличие новых файлов";
 
 //-- chunks, plugins, shippets, templates - default in core lexicon
-
+$_lang['semanager.tabs.actions'] = "Действия";
 $_lang['semanager.common.actions.fromfiles'] = "Создать элементы из файлов";
 $_lang['semanager.common.actions.allsync'] = "Синхронизировать все";
 

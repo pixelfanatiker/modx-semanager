@@ -8,7 +8,7 @@
 
 $action = $modx->newObject('modAction');
 $action->fromArray(array(
-    'id'=>'1',
+    'id'=>'200',
     'namespace' => 'semanager',
     'parent' => 0,
     'controller' => 'home',

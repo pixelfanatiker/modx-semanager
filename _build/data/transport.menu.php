@@ -8,6 +8,7 @@
 
 $action = $modx->newObject('modAction');
 $action->fromArray(array(
+    'id'=>'1',
     'namespace' => 'semanager',
     'parent' => 0,
     'controller' => 'home',
@@ -15,12 +16,12 @@ $action->fromArray(array(
     'lang_topics' => 'semanager:default',
     'assets' => '',
 ),'',true,true);
-die(var_dump($action->id));
+//die(var_dump($action->id));
 $menu= $modx->newObject('modMenu');
 $menu->fromArray(array(
-    'text' => 'semanager',
+    'text' => 'semanager.title',
     'parent' => 'components',
-    'description' => 'semanager.desc',
+    'description' => 'semanager.description',
     'action' => $action->id,
     'menuindex' => 0,
     'params' => '',

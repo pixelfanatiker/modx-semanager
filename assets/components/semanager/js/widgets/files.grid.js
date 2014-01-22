@@ -301,21 +301,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
             }
         });
 
-        /*
-        var que = MODx.load({
-            xtype: 'modx-window-quick-update-' + this.config.type
-            ,record: r
-            ,grid: this
-            ,listeners: {
-                'success' : {fn:function(){
-                    this.refresh();
-                },scope:this}
-            }
-        });
-        */
-        //que.reset();
-        //que.setValues(r);
-        //que.show(e.target);
+
     }
 });
 

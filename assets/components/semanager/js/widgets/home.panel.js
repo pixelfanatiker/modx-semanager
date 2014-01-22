@@ -33,7 +33,7 @@ SEManager.panel.Home = function(config) {
                     ,bodyCssClass: 'panel-desc'
                     ,items: [{
                         xtype: 'button'
-                        ,text: 'Синхронизировать все'
+                        ,text: _('semanager.common.actions.allsync')
                         ,icon: MODx.config.template_url + 'images/restyle/icons/refresh.png'
                         ,cls:'x-btn-text-icon'
                         ,style: {
@@ -46,11 +46,11 @@ SEManager.panel.Home = function(config) {
                                 Ext.Ajax.request({
                                     url: SEManager.config.connectorUrl
                                     ,success: function(response) {
-                                        console.log(response.responseText);
+                                        //
 
                                     }
                                     ,failure: function(response) {
-                                        console.log(response);
+                                        //
                                     }
                                     ,params: {
                                         action: 'common/syncall'
@@ -60,7 +60,7 @@ SEManager.panel.Home = function(config) {
                             }
                         }
                     },{
-                        html: '<p>Синхронизирует все элементы и сканирует папку на наличие новых файлов</p>'
+                        html: '<p style="background-color: #F7F7F7;">' + _('semanager.sync.description') + '</p>'
                         ,border: false
                         ,style: {
                             lineHeight: '30px'

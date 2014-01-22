@@ -24,5 +24,20 @@
  
 $_lang['semanager.title'] = 'SE Manager';
 $_lang['semanager.description'] = 'Manager for extra control of Static Elements';
-$_lang['semanager.common_settings'] = "Common settings";
+$_lang['semanager.sync.description'] = "Synchronizes all elements and scans directory for new files";
+
+//-- chunks, plugins, shippets, templates - default in core lexicon
+
+$_lang['semanager.common.actions.fromfiles'] = "Create elements from files";
+$_lang['semanager.common.actions.allsync'] = "Synchronize all";
+
+$_lang['semanager.elements.filter_by_name'] = "Filter by name";
+$_lang['semanager.elements.filter_by_category'] = "Filter by category";
+
+$_lang['semanager.elements.static'] = "Static";
+$_lang['semanager.elements.file'] = "File of the element";
+$_lang['semanager.elements.make_static_file'] = "Make static";
+$_lang['semanager.elements.remove_static_file'] = "Remove static file";
+$_lang['semanager.elements.exclude_element'] = "Exclude an element";
+
 $_lang['semanager.no_permission'] = 'Not permission';

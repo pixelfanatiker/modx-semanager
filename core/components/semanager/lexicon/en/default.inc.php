@@ -27,7 +27,7 @@ $_lang['semanager.description'] = 'Manager for extra control of Static Elements'
 $_lang['semanager.sync.description'] = "Synchronizes all elements and scans directory for new files";
 
 //-- chunks, plugins, shippets, templates - default in core lexicon
-
+$_lang['semanager.tabs.actions'] = "Activity";
 $_lang['semanager.common.actions.fromfiles'] = "Create elements from files";
 $_lang['semanager.common.actions.allsync'] = "Synchronize all";
 

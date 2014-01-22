@@ -10,7 +10,7 @@ SEManager.grid.Files = function(config) {
     if (!config.tbar) {
         config.tbar = [{
             xtype: 'button'
-            ,text: 'Создать элементы из файлов'
+            ,text: _('semanager.common.actions.fromfiles')
             ,icon: MODx.config.template_url + 'images/restyle/icons/elements.png'
             ,cls:'x-btn-text-icon'
             ,style: {
@@ -23,11 +23,6 @@ SEManager.grid.Files = function(config) {
                     Ext.Ajax.request({
                         url: SEManager.config.connectorUrl
                         ,success: function(response) {
-                           // this.refresh();
-                            //SEManager.grid.Files.refresh();
-                            //console.log(this.cm);
-                            //p.setValue(response.responseText);
-                            //p.enable();
                         }
                         ,params: {
                             action: 'files/newelem.class'
@@ -35,10 +30,7 @@ SEManager.grid.Files = function(config) {
                     });
                 }
             }
-            ,handler: {
-                xtype: 'modx-window-quick-createfrom-'+config.type
-                ,blankValues: true
-            }
+            ,handler: this.updateGrid
         }];
     }
     config.tbar.push('->',{
@@ -118,6 +110,8 @@ SEManager.grid.Files = function(config) {
             ,handler: this.collapseAll
             ,scope: this
         }]
+
+
         /* Editors are pushed here. I think that they should be in general grid
          * definitions (modx.grid.js) and activated via a config property (loadEditor: true) */
         ,getCellEditor: function(colIndex, rowIndex) {
@@ -172,7 +166,6 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
 
         return r;
 
-        //return _(r.slice(0,-1))
     }
 
     ,categoryRender: function(r) {
@@ -244,9 +237,14 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         this.getBottomToolbar().changePage(1);
         this.refresh();
     }
+    ,updateGrid: function() {
+        this.getBottomToolbar().changePage(1);
+        this.refresh();
+    }
+
     ,clearFilter: function() {
         this.getStore().baseParams = {
-            action: 'elements/getlist'
+            action: 'files/getlist'
             ,type: this.config.type
         };
         Ext.getCmp('semanager-filter-category'+this.config.type).reset();
@@ -255,10 +253,6 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         this.refresh();
     }
     ,getMenu: function(r) {
-
-
-        console.log(r);
-
         var m = [];
         m.push({
             text: 'Make Element from File'
@@ -274,26 +268,15 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
             MODx.msg.confirm({
                 title: 'Выберите тип элемента'
                 ,text: 'context_remove_confirm'
-                //,url: MODx.config.connectors_url+'context/index.php'
-                //,params: {
-                //    action: 'remove'
-                //   ,key: key
-                //}
-                //,listeners: {
-                //    'success': {fn:function() {this.refresh();},scope:this}
-                //}
-            });
-            //alert('dfdfasdf');
-        }
 
-        console.log(r);
+            });
+
+        }
 
         Ext.Ajax.request({
             url: SEManager.config.connectorUrl
             ,success: function(response) {
-                console.log(response);
-                //p.setValue(response.responseText);
-                //p.enable();
+
             }
             ,params: {
                 action: 'files/makeelement'

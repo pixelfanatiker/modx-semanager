@@ -24,28 +24,17 @@
 class modSEManagerGetCategoryListProcessor extends modObjectGetListProcessor {
 
     public $classKey = 'modCategory';
-    //public $languageTopics = array('');
-    //public $permission = '';
     public $defaultSortField = 'category';
 
     function getData() {
         $data = array();
-
-        //$type = 'mod'.ucfirst($this->getProperty('type'));
-
         $limit = intval($this->getProperty('limit'));
         $start = intval($this->getProperty('start'));
 
         $c = $this->modx->newQuery($this->classKey);
-
-        // ??? выбрать только категории, которые относятся к этому типу элементов
-
-
-
         $c = $this->prepareQueryBeforeCount($c);
         $data['total'] = $this->modx->getCount($this->classKey,$c);
         $c = $this->prepareQueryAfterCount($c);
-
         $sortClassKey = $this->getSortClassKey();
         $sortKey = $this->modx->getSelectColumns($sortClassKey,$this->getProperty('sortAlias',$sortClassKey),'',array($this->getProperty('sort')));
         if (empty($sortKey)) $sortKey = $this->getProperty('sort');
@@ -63,13 +52,3 @@ class modSEManagerGetCategoryListProcessor extends modObjectGetListProcessor {
 }
 
 return 'modSEManagerGetCategoryListProcessor';
-
- /*
-if (!empty($addall)) {
-    $list = array(array('id' => 0, 'name' => $modx->lexicon('ms.combo.all')));
-}
-else {
-    $list = array();
-}
-
- */

@@ -32,10 +32,3 @@ $rrr = $modx->getOption('root', $_REQUEST, '');
 
 $modx->semanager->syncAll();
 
-#if($rrr == ''){
-#    return $modx->error->failure('Пиздец!');
-#}
-
-//return $modx->error->success($modx->semanager->syncAll());
-
-#return $this->success('Успешно!' . $rrr);

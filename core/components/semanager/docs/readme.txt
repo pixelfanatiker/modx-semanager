@@ -1,8 +1,10 @@
-# Static Elements Manager for MODX #
+--------------------
+Static Elements Manager for MODX
+--------------------
 
 This extra provides advanced batch management static elements of the website running on [MODX CMF] (http://modx.com).
 
-Get even more Creative freedom™!
+Get even more Creative freedom!
 
 ## Latest Changes ##
 
@@ -21,3 +23,5 @@ MODX Revolution is free software; you can redistribute it and/or modify it under
 GNU General Public License v2
 
 Thank you for using Static Elements Manager for MODX!
+
+Company: LOVATA Group <info@lovata.com>

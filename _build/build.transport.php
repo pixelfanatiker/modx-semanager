@@ -15,7 +15,7 @@ set_time_limit(0);
 /* define package */
 define('PKG_NAME','SE Manager');
 define('PKG_NAME_LOWER', 'semanager');
-define('PKG_VERSION','0.2.0');
+define('PKG_VERSION','0.1.0');
 define('PKG_RELEASE','beta');
 $root = dirname(dirname(__FILE__)) . '/';
 $sources= array (

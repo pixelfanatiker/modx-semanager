@@ -1,16 +1,24 @@
 Static Elements Manager for MODX
 
-This extra provides advanced batch management static elements of the website running on MODX CMF (http://modx.com).
+Description
+
+This extra provides advanced batch management static elements (chunks, plugins, snippets, templates) of the website running on MODX CMF.
 
 Get even more Creative freedom™!
 
+Features
+
+- Quick elements creation from one place in Manager.
+- Auto-creation elements from files.
+- Synchronisation of elements between file system and DB.
+
 Latest Changes
 
-For details read the complete changelog (https://github.com/lovata/modx-semanager/blob/master/core/components/semanager/docs/changelog.txt).
+For details read the complete changelog.
 
 Copyright
 
-Static Elements Manager for MODX is authored by Ivan Klimchuk (http://klimchuk.com) and copyright 2012-2013 by LOVATA Group, LLC (http://lovata.com).
+Static Elements Manager for MODX is authored by Ivan Klimchuk and copyright 2012-2013 by LOVATA Group, LLC.
 
 All rights reserved.
 

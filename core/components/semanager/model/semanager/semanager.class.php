@@ -300,7 +300,7 @@ class SEManager {
             if ($e != '.' and $e != '..'){
 
                 if(is_dir($d->path.$e)){
-                    $this->_scanFolder($d->path.$e.'/', &$files);
+                    $this->_scanFolder($d->path.$e.'/', $files);
                 }else{
 
                     $files[] = $d->path.$e;
@@ -439,7 +439,7 @@ class SEManager {
         $parents[] = $category_list[$id]['name'];
         $parent = $category_list[$id]['parent'];
         if($parent != 0){
-            $this->_findAllParents($parent, &$parents, $category_list);
+            $this->_findAllParents($parent, $parents, $category_list);
         }
     }
 
@@ -464,7 +464,7 @@ class SEManager {
         }
 
         $map = array();
-        $this->_findAllParents($id_category, &$map, $list);
+        $this->_findAllParents($id_category, $map, $list);
 
         $map_to_path = join('/',array_reverse($map));
 

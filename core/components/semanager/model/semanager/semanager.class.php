@@ -23,7 +23,7 @@
 class SEManager {
 
     public $modx = null;
-
+    public $map = array();
     public $config = array();
 
     /**
@@ -165,17 +165,15 @@ class SEManager {
 
         if($element_class == 'modTemplate'){
             $element->set('name', $element->templatename);
-
-            //$this->modx->log(E_ERROR, 'E: '.serialize($element->toArray()));
         }
 
         $file_path = $path .  $element->name.'.'. $filename_tpl;
-        //$this->modx->log(E_ERROR, $filename_tpl);
         touch($file_path);
 
         $content = $element->getContent();
         $element->set('static_file', $file_path);
         $element->set('static', true);
+        $element->set('source', 0);
         $element->setFileContent($content);
 
         if($element->save()){
@@ -230,11 +228,8 @@ class SEManager {
     public function getNewFiles(){
 
         $files = array();
-
         foreach($this->scanElementsFolder() as $f){
-
             if($this->checkNewFileForElement($f)){
-
                 $path = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/');
                 $type_separation = $this->modx->getOption('semanager.type_separation', null, true);
                 $use_categories = $this->modx->getOption('semanager.use_categories', null, true);
@@ -244,10 +239,22 @@ class SEManager {
 
                 $file_path = array_reverse(explode('/',str_replace($path, '', $f)));
 
+                $full_category = array_reverse($file_path);
+                array_shift($full_category);
+                array_pop($full_category);
+                $full_category = implode('/',$full_category);
+                $full_category = $full_category.'/';
+
+
+                if($use_categories){
+                    $category = $full_category;
+
+                    if($category == '/'){
+                        $category = 0;
+                    }
+                }
+
                 $filename = array_shift($file_path);
-
-                //$this->modx->log(E_ERROR, $filename);
-
                 // TODO: добавить дополнительно проверку, если файл не в папке вообще
                 if($type_separation){
                     $type = array_pop($file_path);
@@ -255,27 +262,16 @@ class SEManager {
                         $type = 0;
                     }
                 }
-                //$type = ($type_separation)? array_pop($file_path) : 'None';
-
-                if($use_categories){
-                    $category = array_shift($file_path);
-                    if($category == ''){
-                        $category = 0;
-                    }
-                }
-
-
-
-                $files[] = array(
+             $files[] = array(
                     'filename' => $filename,
                     'category' => $category,
                     'type' => $type,
-                    'path' => $f
+                    'path' => $f,
+                    'content'=>file_get_contents($f, true)
 
                 );
             }
         }
-        //$this->modx->log(E_ERROR, count($files));
         return $files;
 
     }
@@ -330,7 +326,7 @@ class SEManager {
      */
     private function _makePath($element){
 
-        $path = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/');
+        $path = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'elements/');
         $type_separation = $this->modx->getOption('semanager.type_separation', null, true);
         $use_categories = $this->modx->getOption('semanager.use_categories', null, true);
 
@@ -358,6 +354,7 @@ class SEManager {
     public function makeStaticElement($element){
 
         $path = $this->_makePath($element);
+       // $this->modx->log(E_ERROR,  $path);
         $type = $this->_getTypeOfElement($element);
 
         $filename_tpl = $this->modx->getOption('semanager.filename_tpl_' . $type, null, '');
@@ -367,19 +364,12 @@ class SEManager {
         }else{
             $file_path = $path . $element->name .'.'.$filename_tpl;
         }
-
         $this->_makeDirs(dirname($file_path));
-
         touch($file_path);
-
         $content = $element->getContent();
         $element->set('static_file', $file_path);
         $element->set('static', true);
-
 	    $element->setFileContent($content);
-
-    	//$this->modx->log(E_ERROR, 'E: '.serialize($element->toArray()));
-
         if($element->save()){
             return $element;
         }else{
@@ -440,7 +430,10 @@ class SEManager {
         $parent = $category_list[$id]['parent'];
         if($parent != 0){
             $this->_findAllParents($parent, $parents, $category_list);
+        }else{
+            $this->map = $parents;
         }
+
     }
 
     /**
@@ -449,10 +442,10 @@ class SEManager {
      * @param $id_category
      * @return string
      */
+
     public function getCategoriesMap($id_category){
 
         if($id_category == 0) return '';
-
         // get all categories
         $categories = $this->modx->getCollection('modCategory');
         $list = array();
@@ -462,11 +455,8 @@ class SEManager {
                 'name'      => $c->category
             );
         }
-
-        $map = array();
-        $this->_findAllParents($id_category, $map, $list);
-
-        $map_to_path = join('/',array_reverse($map));
+        $this->_findAllParents($id_category, array(), $list);
+        $map_to_path = join('/',array_reverse($this->map));
 
         return $map_to_path;
     }
@@ -484,26 +474,125 @@ class SEManager {
         return @mkdir($strPath);
     }
 
+    public function parseCategory($category){
+        if($category == '0'){
+            return '0';
+        }else{
+            $category = explode('/',$category);
+            array_pop($category);
+            $prev_id = '0';
+            for($i=0;$i<sizeof($category);$i++){
+                $categ = $this->modx->getObject('modCategory',array('category'=>$category[$i],'parent'=>$prev_id));
+
+                if($categ){
+                    $id_categ = $categ->id;
+                    $prev_id = $categ->id;
+
+                }else{
+                    $new_categ = $this->modx->newObject('modCategory');
+                    $new_categ->set('parent',$prev_id);
+                    $new_categ->set('category',$category[$i]);
+                    $new_categ->save();
+                    $prev_id = $new_categ->id;
+                    $id_categ = $new_categ->id;
+                }
+            }
+        }
+        return $id_categ;
+
+
+    }
+
+    public function newOneElem($path_file,$categoryName){
+
+        if($this->checkNewFileForElement($path_file)){
+            $typesClass = array(
+                'templates'=>array('modTemplate',$this->modx->getOption('semanager.filename_tpl_template', null, 'tp.html')),
+                'chunks' =>array('modChunk',$this->modx->getOption('semanager.filename_tpl_chunk', null, 'ch.html')),
+                'snippets' =>array('modSnippet',$this->modx->getOption('semanager.filename_tpl_snippet', null, 'sn.php')),
+                'plugins' =>array('modPlugin',$this->modx->getOption('semanager.filename_tpl_plugin', null, 'pl.php'))
+            );
+
+            $path = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH.'/elements/');
+            $type_separation = $this->modx->getOption('semanager.type_separation', null, true);
+            $use_categories = $this->modx->getOption('semanager.use_categories', null, true);
+
+            $category = 0;
+            $type = '0';
+
+            $file_path = array_reverse(explode('/',str_replace($path, '', $path_file)));
+            $filename = array_shift($file_path);
+            if($type_separation){
+                $type = array_pop($file_path);
+                if($type == ''){
+                    $type = 0;
+                }
+            }
+            if($use_categories){
+                $category = array_shift($file_path);
+                if($category == ''){
+                    $category = 0;
+                }
+            }
+            $id_cat = $this->parseCategory($categoryName);
+            $newObj = $this->modx->newObject($typesClass[$type][0]);
+            $newObj->set('static','1');
+            $newObj->set('source', 0);
+            $newObj->set('static_file',$path_file);
+            $newObj->set('category',$id_cat);
+            if($type == 'templates'){
+                $title = str_replace('.'.$typesClass[$type][1], "", $filename);
+                $newObj->set('templatename',$title);
+            }else{
+                $title = str_replace('.'.$typesClass[$type][1], "", $filename);
+                $newObj->set('name',$title);
+            }
+            $content = file_get_contents($path_file, true);
+            if($type == 'templates'){
+                $newObj->set('content',$content);
+            }
+            if($type == 'snippets'){
+                $newObj->set('snippet',$content);
+            }
+            if($type == 'plugins'){
+                $newObj->set('plugincode',$content);
+            }
+            if($type == 'chunks'){
+                $newObj->set('snippet',$content);
+            }
+            $newObj->save();
+            return true;
+
+        }
+
+    }
+
+
+
+
+
     public function newElem(){
         $files = $this->getNewFiles();
         $typesClass = array(
-           'templates'=>array('modTemplate','.tp.html'),
-           'chunks' =>array('modChunk','.ch.html'),
-           'snippets' =>array('modSnippet','.sn.php'),
-           'plugins' =>array('modPlugin','.pl.php')
+           'templates'=>array('modTemplate',$this->modx->getOption('semanager.filename_tpl_template', null, 'tp.html')),
+           'chunks' =>array('modChunk',$this->modx->getOption('semanager.filename_tpl_chunk', null, 'ch.html')),
+           'snippets' =>array('modSnippet',$this->modx->getOption('semanager.filename_tpl_snippet', null, 'sn.php')),
+           'plugins' =>array('modPlugin',$this->modx->getOption('semanager.filename_tpl_plugin', null, 'pl.php'))
         );
 
         foreach($files as $files_item){
-
+            $id_cat = $this->parseCategory($files_item['category']);
             $newObj = $this->modx->newObject($typesClass[$files_item['type']][0]);
-           // $this->modx->log(E_ERROR,$typesClass[$files_item['type']][0]);
             $newObj->set('static','1');
+            $newObj->set('source', 0);
             $newObj->set('static_file',$files_item['path']);
+            $newObj->set('category',$id_cat);
+
             if($files_item['type'] == 'templates'){
-                $title = str_replace($typesClass[$files_item['type']][1], "", $files_item['filename']);
+                $title = str_replace('.'.$typesClass[$files_item['type']][1], "", $files_item['filename']);
                 $newObj->set('templatename',$title);
             }else{
-                $title = str_replace($typesClass[$files_item['type']][1], "", $files_item['filename']);
+                $title = str_replace('.'.$typesClass[$files_item['type']][1], "", $files_item['filename']);
                 $newObj->set('name',$title);
             }
             $content = file_get_contents($files_item['path'], true);
@@ -521,7 +610,6 @@ class SEManager {
             }
             $newObj->save();
         }
-        //$this->modx->log(E_ERROR,'E: '.serialize($files));
         return 'true';
     }
 

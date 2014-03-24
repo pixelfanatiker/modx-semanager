@@ -28,11 +28,22 @@ $_lang['semanager.sync.description'] = "Synchronizes all elements and scans dire
 
 //-- chunks, plugins, shippets, templates - default in core lexicon
 $_lang['semanager.tabs.actions'] = "Activity";
+$_lang['semanager.common.actions.quickupdatefile'] = "Quick update file";
 $_lang['semanager.common.actions.fromfiles'] = "Create elements from files";
+$_lang['semanager.common.actions.fromfile'] = "Create element from file";
+$_lang['semanager.common.actions.deletefile'] = "Delete file";
+$_lang['semanager.common.actions.delete'] = "Delete";
+$_lang['semanager.common.actions.deletefileq'] = "Delete file?";
+
+$_lang['semanager.common.actions.create.element'] = "Create element";
+$_lang['semanager.common.actions.create.element.confirm'] = "Create element?";
+
 $_lang['semanager.common.actions.allsync'] = "Synchronize all";
 
 $_lang['semanager.elements.filter_by_name'] = "Filter by name";
 $_lang['semanager.elements.filter_by_category'] = "Filter by category";
+
+$_lang['semanager.elements.filter_by_type'] = "Filter by type";
 
 $_lang['semanager.elements.static'] = "Static";
 $_lang['semanager.elements.file'] = "File of the element";

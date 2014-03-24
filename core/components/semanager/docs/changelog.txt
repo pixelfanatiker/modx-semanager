@@ -1,3 +1,11 @@
+0.1.1 beta1 (March 24, 2014)
+================================
+- [#8] Added synchronization by category
+- [#9] Added simple progressbar for synchronization and creating elements of the files
+- Added the ability to edit and delete files directly from "Activity" tab
+- On the "Activity" tab added a filter by type
+- Minor bug fixes
+
 0.1.0 beta2 (February 4, 2014)
 ================================
 - Add full belarus translation

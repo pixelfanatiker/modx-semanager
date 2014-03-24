@@ -29,7 +29,7 @@ $settings[1]->fromArray(array(
 $settings[2]= $modx->newObject('modSystemSetting');
 $settings[2]->fromArray(array(
     'key' => 'semanager.filename_tpl_plugin',
-    'value' => 'pl.html',
+    'value' => 'pl.php',
     'xtype' => 'textfield',
     'namespace' => 'semanager',
     'area' => 'Files',
@@ -38,7 +38,7 @@ $settings[2]->fromArray(array(
 $settings[3]= $modx->newObject('modSystemSetting');
 $settings[3]->fromArray(array(
     'key' => 'semanager.filename_tpl_snippet',
-    'value' => 'sn.html',
+    'value' => 'sn.php',
     'xtype' => 'textfield',
     'namespace' => 'semanager',
     'area' => 'Files',

@@ -8,6 +8,7 @@ SEManager.grid.Files = function(config) {
     });
 
     if (!config.tbar) {
+
         config.tbar = [{
             xtype: 'button'
             ,text: _('semanager.common.actions.fromfiles')
@@ -20,36 +21,29 @@ SEManager.grid.Files = function(config) {
             }
             ,listeners: {
                 click: function(){
-                    Ext.Ajax.request({
-                        url: SEManager.config.connectorUrl
-                        ,success: function(response) {
-                        }
-                        ,params: {
-                            action: 'files/newelem.class'
-                        }
-                    });
+
                 }
             }
-            ,handler: this.updateGrid
+            ,handler:this.makeElements
         }];
     }
     config.tbar.push('->',{
         xtype: 'modx-combo'
-        ,name: 'filter_category'
-        ,id: 'semanager-filter-category-files'
-        ,emptyText: _('semanager.elements.filter_by_category')
-        ,fields: ['id','category']
-        ,displayField: 'category'
+        ,name: 'filter_type'
+        ,id: 'semanager-filter-type-files'
+        ,emptyText: _('semanager.elements.filter_by_type')
+        ,fields: ['id','type']
+        ,displayField: 'type'
         ,valueField: 'id'
         ,width: 250
         ,pageSize: 10
         ,url: SEManager.config.connectorUrl
         ,baseParams: {
-            action: 'elements/getcategorylist'
+            action: 'files/gettypelist.class'
             ,type: config.type
         }
         ,listeners: {
-            'select': {fn: this.filterByCategory, scope: this}
+            'select': {fn: this.filterByType, scope: this}
         }
     },'-',{
         xtype: 'textfield'
@@ -78,12 +72,12 @@ SEManager.grid.Files = function(config) {
             header: _('name')
             ,dataIndex: 'filename'
             ,width: 30
-            ,sortable: true
+            ,sortable: false
         },{
             header: _('category')
             ,dataIndex: 'category'
             ,width: 30
-            ,sortable: true
+            ,sortable: false
             ,renderer: this.categoryRender
         },{
             header: _('type')
@@ -97,7 +91,8 @@ SEManager.grid.Files = function(config) {
             ,dataIndex: 'path'
             ,sortable: false
             ,editable: false
-        }]
+        }
+        ]
         ,tools: [{
             id: 'plus'
             ,qtip: _('expand_all')
@@ -130,7 +125,7 @@ SEManager.grid.Files = function(config) {
 
     Ext.applyIf(config,{
         cm: this.cm
-        ,fields: ['filename','category','type', 'path']
+        ,fields: ['filename','category','type', 'path','content']
         ,id: 'semanager-grid-elements-files'
         ,url: SEManager.config.connectorUrl
         ,baseParams: {
@@ -177,7 +172,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         }
         return r;
     }
-
+/*
     ,renderDynField: function(v,md,rec,ri,ci,s,g) {
         var r = s.getAt(ri).data;
         var f,idx;
@@ -219,7 +214,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         }
         return Ext.util.Format.htmlEncode(oz);
     }
-
+*/
     ,onDirty: function(){
         console.log(this.config.panel);
 
@@ -227,8 +222,11 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
             Ext.getCmp(this.config.panel).fireEvent('fieldChange');
         }
     }
-    ,filterByCategory: function(category, selected){
-        this.getStore().baseParams.categoryfilter = selected.id;
+    ,filterByType: function(type, selected){
+        this.getStore().baseParams = {
+            action: 'files/getlist'
+            ,type: selected.id
+        };
         this.getBottomToolbar().changePage(1);
         this.refresh();
     }
@@ -238,6 +236,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         this.refresh();
     }
     ,updateGrid: function() {
+        alert(123);
         this.getBottomToolbar().changePage(1);
         this.refresh();
     }
@@ -245,45 +244,118 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
     ,clearFilter: function() {
         this.getStore().baseParams = {
             action: 'files/getlist'
-            ,type: this.config.type
         };
-        Ext.getCmp('semanager-filter-category'+this.config.type).reset();
-        Ext.getCmp('semanager-filter-name-'+this.config.type).reset();
+
         this.getBottomToolbar().changePage(1);
         this.refresh();
     }
     ,getMenu: function(r) {
         var m = [];
         m.push({
-            text: 'Make Element from File'
+            text: _('semanager.common.actions.fromfile')
             ,handler: this.makeElement
+        });
+        m.push({
+            text: _('semanager.common.actions.quickupdatefile')
+            ,handler: this.updatefile
+        });
+        m.push({
+            text: _('semanager.common.actions.deletefile')
+            ,handler: this.deleteFiles
         });
         this.addContextMenuItem(m);
     }
-    ,makeElement: function(btn,e){
-        var r = this.menu.record;
-        r.clearCache = 1;
-
-        if(r.type == null){
-            MODx.msg.confirm({
-                title: 'Выберите тип элемента'
-                ,text: 'context_remove_confirm'
-
-            });
-
-        }
-
-        Ext.Ajax.request({
-            url: SEManager.config.connectorUrl
-            ,success: function(response) {
-
-            }
+    ,deleteFiles: function(btn,e){
+        MODx.msg.confirm({
+            title: _('semanager.common.actions.delete')
+            ,text: _('semanager.common.actions.deletefileq')
+            ,url: this.config.url
             ,params: {
-                action: 'files/makeelement'
-                ,element: r
+                action: 'files/delete.class'
+                ,path: this.menu.record.path
+            }
+            ,listeners: {
+                'success': {fn:function(){
+                    this.refresh();
+                },scope:this}
             }
         });
+    }
+    ,updatefile: function(btn,e){
+        var r = this.menu.record;
+        r.name = r.filename;
+        r.source = '0';
+        r.file = r.path;
+        r.clearCache = 1;
+        var que = MODx.load({
+            xtype: 'modx-window-file-quick-update'
+            ,url: this.config.url
+            ,record: r
+            ,grid: this
+            ,action: 'files/updatefiles.class'
+            ,listeners: {
+                'success': {fn:function(){
+                    this.refresh();
+                },scope:this}
+            }
+        });
+        que.reset();
+        que.setValues(r);
+        que.show(e.target);
 
+    }
+    ,makeElement: function(btn,e){
+        MODx.msg.confirm({
+            title: _('semanager.common.actions.create.element')
+            ,text: _('semanager.common.actions.create.element.confirm')
+            ,url: this.config.url
+            ,params: {
+                action: 'files/makeelement.class'
+                ,path: this.menu.record.path
+                ,category: this.menu.record.category
+            }
+            ,listeners: {
+                'success': {fn:function(){
+                    this.refresh();
+                },scope:this}
+            }
+        });
+    }
+    ,makeElements: function(btn,e){
+
+         Ext.Msg.show({
+             title: _('please_wait')
+             ,msg: ('Создание элементов из файлов')
+             ,width: 240
+             ,progress:true
+             ,closable:false
+         });
+
+         MODx.util.Progress.reset();
+         for(var i = 1; i < 20; i++) {
+
+            setTimeout('MODx.util.Progress.time('+i+','+MODx.util.Progress.id+')',i*1000);
+         }
+
+         MODx.Ajax.request({
+             url: SEManager.config.connectorUrl
+             ,params: {
+                action: 'files/newelem.class'
+             }
+             ,listeners: {
+             'success': {fn:function(r) {
+                 MODx.util.Progress.reset();
+                 Ext.Msg.hide();
+                     this.refresh();
+                 },scope:this}
+                 ,'failure': {fn:function(r) {
+                     MODx.util.Progress.reset();
+                     Ext.Msg.hide();
+                     return false;
+                 },scope:this}
+             }
+
+         });
 
     }
 });

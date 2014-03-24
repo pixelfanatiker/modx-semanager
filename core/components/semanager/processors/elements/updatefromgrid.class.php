@@ -31,6 +31,7 @@ class modSEManagerUpdateElementsFromGridProcessor extends modProcessor {
         ));
 
         if($record['static'])
+
             $this->semanager->makeStaticElement($e); // make static
         else
             $this->semanager->unmakeStaticElement($e); // unmake static

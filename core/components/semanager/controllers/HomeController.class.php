@@ -40,7 +40,12 @@ class SEManagerHomeControllerManagerController extends SEManagerManagerControlle
         $this->addJavascript($this->semanager->config['jsUrl'].'widgets/common.tab.js');
 
         $this->addJavascript($this->semanager->config['jsUrl'].'widgets/home.panel.js');
-        $this->addLastJavascript($this->semanager->config['jsUrl'].'sections/home.js');
+        $this->addJavascript($this->semanager->config['jsUrl'].'sections/home.js');
+        $this->addHtml('<script>
+            Ext.onReady(function() {
+                MODx.load({ xtype: "semanager-page-home"});
+            });
+        </script>');
     }
 
 }

@@ -1,7 +1,3 @@
-Ext.onReady(function() {
-    MODx.load({ xtype: 'semanager-page-home'});
-});
-
 SEManager.page.Home = function(config) {
     config = config || {};
     Ext.applyIf(config,{

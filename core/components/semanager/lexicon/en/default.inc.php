@@ -28,6 +28,7 @@ $_lang['semanager.sync.description'] = "Synchronizes all elements and scans dire
 
 //-- chunks, plugins, shippets, templates - default in core lexicon
 $_lang['semanager.tabs.actions'] = "Activity";
+$_lang['semanager.tabs.settings'] = 'Options';
 $_lang['semanager.common.actions.quickupdatefile'] = "Quick update file";
 $_lang['semanager.common.actions.fromfiles'] = "Create elements from files";
 $_lang['semanager.common.actions.fromfile'] = "Create element from file";

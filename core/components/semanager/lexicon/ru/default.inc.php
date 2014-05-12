@@ -28,6 +28,8 @@ $_lang['semanager.sync.description'] = "Синхронизирует все эл
 
 //-- chunks, plugins, shippets, templates - default in core lexicon
 $_lang['semanager.tabs.actions'] = "Действия";
+$_lang['semanager.tabs.settings'] = 'Настройки';
+$_lang['semanager.tab.options.desc'] = 'Основные настройки';
 $_lang['semanager.common.actions.quickupdatefile'] = "Быстро обновить файл";
 $_lang['semanager.common.actions.fromfiles'] = "Создать элементы из файлов";
 $_lang['semanager.common.actions.fromfile'] = "Создать элемент из файла";

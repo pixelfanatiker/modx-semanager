@@ -165,14 +165,19 @@ SEManager.panel.Home = function(config) {
                     ,cls: 'main-wrapper'
                     ,type: 'template'
                 }]
-            }/*,{
-                //title: _('semanager.tabs.settings')
-                title: 'Исключения'
+            },{
+                title: _('semanager.tabs.settings')
                 ,id: 'semanager-tab-settings'
                 ,items: [{
-                    xtype: 'semanager-tab-common'
+                    html: '<p>'+_('semanager.tab.options.desc')+'</p>'
+                    ,border: false
+                    ,bodyCssClass: 'panel-desc'
+
+                },{
+                     xtype: 'semanager-tab-options'
+                    ,cls: 'main-wrapper'
                 }]
-            }*/
+            }
             ]
           
         }]

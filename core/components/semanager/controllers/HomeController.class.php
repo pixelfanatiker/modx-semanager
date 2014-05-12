@@ -34,19 +34,18 @@ class SEManagerHomeControllerManagerController extends SEManagerManagerControlle
     }
 
     public function loadCustomCssJs() {
-
         $this->addCss($this->semanager->config['cssUrl'].'semanager.css');
         $this->addJavascript($this->semanager->config['jsUrl'].'widgets/elements.grid.js');
         $this->addJavascript($this->semanager->config['jsUrl'].'widgets/files.grid.js');
-        $this->addJavascript($this->semanager->config['jsUrl'].'widgets/options.grid.js');
+        $this->addJavascript($this->semanager->config['jsUrl'].'widgets/common.tab.js');
 
         $this->addJavascript($this->semanager->config['jsUrl'].'widgets/home.panel.js');
         $this->addJavascript($this->semanager->config['jsUrl'].'sections/home.js');
         $this->addHtml('<script>
-            Ext.onReady(function() {
-                MODx.load({ xtype: "semanager-page-home"});
-            });
-        </script>');
+             Ext.onReady(function() {
+                 MODx.load({ xtype: "semanager-page-home"});
+             });
+         </script>');
     }
 
 }

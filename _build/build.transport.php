@@ -11,12 +11,11 @@ $mtime = explode(" ", $mtime);
 $mtime = $mtime[1] + $mtime[0];
 $tstart = $mtime;
 set_time_limit(0);
-//die(var_dump('123'));
 /* define package */
 define('PKG_NAME','SE Manager');
 define('PKG_NAME_LOWER', 'semanager');
-define('PKG_VERSION','0.1.1');
-define('PKG_RELEASE','beta1');
+define('PKG_VERSION','0.2.1');
+define('PKG_RELEASE','pl');
 $root = dirname(dirname(__FILE__)) . '/';
 $sources= array (
     'root' => $root,

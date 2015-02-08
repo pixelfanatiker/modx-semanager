@@ -47,7 +47,6 @@ class SEManager
             'processorsPath' => $corePath . 'processors/',
             'controllersPath' => $corePath . 'controllers/',
             'templatesPath' => $corePath . 'templates/',
-            // chunks and snippets
 
             'baseUrl' => $assetsUrl,
             'cssUrl' => $assetsUrl . 'css/',
@@ -78,7 +77,8 @@ class SEManager
 
     }
 
-    /**
+
+    /*
      * Initializes SE Manager into different contexts.
      *
      * @access public
@@ -103,24 +103,19 @@ class SEManager
      * Make synchronization of all Elements
      */
     public function syncAll() {
-
-        // TODO: перейти на переменную в config
         $this->elementsDir = $this->config['elementsDir'];
 
         if (!file_exists($this->elementsDir)) {
             $this->_makeDirs($this->elementsDir);
         }
 
-        // 2. проверить настройку - использовать ли типы. если да, то создать папки нужные
         $typeSeparation = $this->modx->getOption('semanager.type_separation', null, true);
-
         if ($typeSeparation) {
-
             $dirs = array(
-                'modTemplate' => $this->elementsDir . 'templates/',
-                'modChunk' => $this->elementsDir . 'chunks/',
-                'modSnippet' => $this->elementsDir . 'snippets/',
-                'modPlugin' => $this->elementsDir . 'plugins/'
+                'modTemplate' => $this->elementsDir . $this->modx->getOption('semanager.template_directory', null, 'templates/'),
+                'modChunk' => $this->elementsDir . $this->modx->getOption('semanager.template_directory', null, 'chunks/'),
+                'modSnippet' => $this->elementsDir . $this->modx->getOption('semanager.template_directory', null, 'snippets/'),
+                'modPlugin' => $this->elementsDir . $this->modx->getOption('semanager.template_directory', null, 'plugins/')
             );
 
             foreach ($dirs as $type => $dir) {
@@ -129,7 +124,6 @@ class SEManager
             }
 
         } else {
-
             $types = array(
                 'modTemplate',
                 'modChunk',
@@ -140,11 +134,14 @@ class SEManager
             foreach ($types as $type) {
                 $this->manyElementsToStatic($type);
             }
-
         }
-
     }
 
+    /**
+     * @param $element
+     * @param $path
+     * @return bool
+     */
     public function oneElementToStatic($element, $path) {
         $useCategories = $this->modx->getOption('semanager.use_categories', null, true);
         if ($useCategories) {
@@ -181,7 +178,10 @@ class SEManager
 
     }
 
-
+    /**
+     * @param $file
+     * @return bool
+     */
     public function checkNewFileForElement($file) {
 
         $fn = array_reverse(explode('.', array_pop(explode('/', $file))));
@@ -221,11 +221,12 @@ class SEManager
                 return true;
             }
         }
-
         return false;
-
     }
 
+    /**
+     * @return array
+     */
     public function getNewFiles() {
         $files = array();
         foreach ($this->scanElementsFolder() as $f) {
@@ -240,6 +241,7 @@ class SEManager
                 $filePath = array_reverse(explode('/', str_replace($path, '', $f)));
 
                 $fullCategory = array_reverse($filePath);
+
                 array_shift($fullCategory);
                 array_pop($fullCategory);
                 $fullCategory = implode('/', $fullCategory);
@@ -254,7 +256,7 @@ class SEManager
 
                 $filename = array_shift($filePath);
 
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [getNewFiles] $filename' . $filename);
+                //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [getNewFiles] ' . $filename);
 
                 // TODO: добавить дополнительно проверку, если файл не в папке вообще
                 if ($typeSeparation) {
@@ -269,6 +271,7 @@ class SEManager
                     'type' => $type,
                     'path' => $f,
                     'content' => file_get_contents($f, true)
+                    //'status' => sha1_file($f)
 
                 );
             }
@@ -276,6 +279,9 @@ class SEManager
         return $files;
     }
 
+    /**
+     * @return array
+     */
     public function scanElementsFolder() {
         $files = array();
         $path = $this->modx->getOption('semanager.elements_dir', null, MODX_ASSETS_PATH . '/elements/');
@@ -284,6 +290,10 @@ class SEManager
         return $files;
     }
 
+    /**
+     * @param $path
+     * @param $files
+     */
     private function _scanFolder($path, &$files) {
         $d = dir($path);
 
@@ -388,6 +398,10 @@ class SEManager
         }
     }
 
+    /**
+     * @param $class_name
+     * @param string $path
+     */
     public function manyElementsToStatic($class_name, $path = '') {
         if ($path == '') {
             $path = $this->elementsDir;
@@ -423,7 +437,6 @@ class SEManager
      * @param $idCategoryory
      * @return string
      */
-
     public function getCategoriesMap($idCategoryory) {
         if ($idCategoryory == 0) return '';
         // get all categories
@@ -454,6 +467,10 @@ class SEManager
         return @mkdir($strPath);
     }
 
+    /**
+     * @param $category
+     * @return string
+     */
     public function parseCategory($category) {
         $idCategory = '';
         if ($category == '0') {
@@ -481,6 +498,12 @@ class SEManager
         return $idCategory;
     }
 
+
+    /**
+     * @param $path_file
+     * @param $categoryName
+     * @return bool
+     */
     public function newOneElem($path_file, $categoryName) {
         if ($this->checkNewFileForElement($path_file)) {
             $typesClass = array(
@@ -534,7 +557,10 @@ class SEManager
         }
     }
 
-
+    /**
+     * @param array $files
+     * @return string
+     */
     public function newElement(array $files = array()) {
         if (!$files) {
             $files = $this->getNewFiles();
@@ -565,7 +591,11 @@ class SEManager
         return 'true';
     }
 
-
+    /**
+     * @param $newObj
+     * @param $path
+     * @param $idCategory
+     */
     public function setElement ($newObj, $path, $idCategory) {
         $newObj->set('static', '1');
         $newObj->set('source', 0);
@@ -573,7 +603,12 @@ class SEManager
         $newObj->set('category', $idCategory);
     }
 
-
+    /**
+     * @param $elementType
+     * @param $newObj
+     * @param $content
+     * @return bool
+     */
     public function saveElement($elementType, $newObj, $content) {
         $typeArray = array('templates', 'snippets', 'plugins', 'chunks');
         foreach ($typeArray as $type) {

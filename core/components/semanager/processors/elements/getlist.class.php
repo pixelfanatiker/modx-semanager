@@ -50,12 +50,60 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor {
         }
 
         $data['results'] = $this->modx->getCollection($this->classKey, $c);
-        return $data;
 
+        $data['results'] = $this->checkElementIfIsChanged($data['results']);
+
+        foreach ($data['results'] as $result) {
+            $resultItem = $result->toArray();
+            $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [getData] : ' . print_r($resultItem, true));
+        }
+
+        return $data;
     }
 
+    /**
+     * @param xPDOObject $object
+     * @return array
+     */
     public function prepareRow(xPDOObject $object) {
         return $object->toArray();
+    }
+
+
+    /**
+     * @param $results
+     * @return mixed
+     */
+    public function checkElementIfIsChanged ($results) {
+
+        foreach ($results as $result) {
+            //$resultItem = $result->toArray();
+            $content = sha1($result->get('content'));
+            $contentNew = sha1_file($result->get('static_file'));
+
+
+            $actionDelete = json_decode('{"className":"times","text":"Löschen"}');
+            $actionUpdate = json_decode('{"className":"refresh","text":"Aktualisieren"}');
+
+
+            if ($contentNew) {
+                if($content != $contentNew) {
+                    $result->set('status', 'changed');
+                    $result->set('actions', array($actionDelete, $actionUpdate));
+                } else {
+                    $result->set('status', 'unchanged');
+                    $result->set('actions', array($actionDelete));
+                }
+            } else {
+                $result->set('status', 'deleted');
+                $result->set('actions', array($actionDelete, $actionUpdate));
+            }
+
+
+            //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [getData] : ' . print_r($resultItem, true));
+        }
+
+        return $results;
     }
 
 }

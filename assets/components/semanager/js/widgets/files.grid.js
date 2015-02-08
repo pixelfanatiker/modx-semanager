@@ -133,6 +133,11 @@ SEManager.grid.Files = function(config) {
 
     this.cm = new Ext.grid.ColumnModel({
         columns: [this.exp,{
+            header: _('status')
+            ,dataIndex: 'status'
+            ,width: 20
+            ,sortable: true
+        },{
             header: _('name')
             ,dataIndex: 'filename'
             ,width: 30
@@ -155,8 +160,7 @@ SEManager.grid.Files = function(config) {
             ,dataIndex: 'path'
             ,sortable: false
             ,editable: false
-        }
-        ]
+        }]
         ,tools: [{
             id: 'plus'
             ,qtip: _('expand_all')
@@ -189,7 +193,7 @@ SEManager.grid.Files = function(config) {
 
     Ext.applyIf(config,{
         cm: this.cm
-        ,fields: ['filename','category','type', 'path','content']
+        ,fields: ['status','filename','category','type', 'path','content']
         ,id: 'semanager-grid-elements-files'
         ,url: SEManager.config.connectorUrl
         ,baseParams: {
@@ -215,6 +219,8 @@ SEManager.grid.Files = function(config) {
     });
     SEManager.grid.Files.superclass.constructor.call(this, config);
 };
+
+
 Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
 
     typeRender: function(r) {
@@ -386,10 +392,9 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         });
     }
     ,makeElements: function(btn,e){
-
          Ext.Msg.show({
              title: _('please_wait')
-             ,msg: ('Создание элементов из файлов')
+             ,msg: ('semanager.common.actions.create.processing')
              ,width: 240
              ,progress:true
              ,closable:false

@@ -72,6 +72,12 @@ SEManager.grid.Elements = function(config) {
             ,dataIndex: 'id'
             ,width: 15
         },{
+            header: _('actions')
+            ,dataIndex: 'actions'
+            ,width: 20
+            ,sortable: true
+            ,renderer: { fn: this._renderActions ,scope:this }
+        },{
             header: _('name')
             ,dataIndex: (config.type=='template')?'templatename':'name'
             ,width: 50
@@ -120,7 +126,7 @@ SEManager.grid.Elements = function(config) {
 
     Ext.applyIf(config,{
         cm: this.cm
-        ,fields: ['id','name','static','static_file', 'description','category','snippet','plugincode','templatename','content','disabled']
+        ,fields: ['id', 'actions', 'name', 'static','static_file', 'description','category','snippet','plugincode','templatename','content','disabled']
         ,id: 'semanager-grid-elements-' + config.type + 's'
         ,url: SEManager.config.connectorUrl
         ,baseParams: {
@@ -145,6 +151,7 @@ SEManager.grid.Elements = function(config) {
         }
     });
     SEManager.grid.Elements.superclass.constructor.call(this, config);
+    this._makeTemplates();
 };
 Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
 
@@ -241,6 +248,21 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         que.reset();
         que.setValues(r);
         que.show(e.target);
+    }
+    ,_renderActions: function(v,md,rec) {
+        console.log(v);
+        console.log(md);
+        console.log(rec.data);
+        return this.tplActions.apply(rec.data);
+    }
+    ,_makeTemplates: function() {
+        this.tplActions = new Ext.XTemplate('<tpl for=".">' +
+        '<div>' +
+        '<tpl for="actions">' +
+        '<i class="controlLink icon icon-{className}" title="{text}"></i>' +
+        '</tpl>' +
+        '</div>' +
+        '</tpl>');
     }
 });
 

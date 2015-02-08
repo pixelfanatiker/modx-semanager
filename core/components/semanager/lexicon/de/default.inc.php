@@ -37,9 +37,11 @@ $_lang['semanager.common.actions.deletefileq'] = "Datei wirklich löschen?";
 
 $_lang['semanager.common.actions.create.element'] = "Element erstellen";
 $_lang['semanager.common.actions.create.element.confirm'] = "Element erstellen?";
+$_lang['semanager.common.actions.create.processing'] = 'Erstelle Elemente...';
 
 $_lang['semanager.common.actions.allsync'] = "Alles synchronisieren";
 $_lang['semanager.common.actions.synchronizing'] = "Synchronizing...";
+
 
 $_lang['semanager.elements.filter_by_name'] = "Nach Name filtern";
 $_lang['semanager.elements.filter_by_category'] = "Nach Kategorie filtern";

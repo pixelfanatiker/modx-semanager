@@ -37,6 +37,7 @@ $_lang['semanager.common.actions.deletefileq'] = "Вы действительн�
 
 $_lang['semanager.common.actions.create.element'] = "Создание элемента из файла";
 $_lang['semanager.common.actions.create.element.confirm'] = "Вы действительно хотите создать элемент из данного файла?";
+$_lang['semanager.common.actions.create.processing'] = 'Создание элементов из файлов';
 
 $_lang['semanager.common.actions.allsync'] = "Синхронизировать все";
 $_lang['semanager.common.actions.synchronizing'] = "Синхронизация...";

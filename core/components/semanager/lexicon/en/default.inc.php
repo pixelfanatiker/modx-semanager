@@ -37,6 +37,7 @@ $_lang['semanager.common.actions.deletefileq'] = "Delete file?";
 
 $_lang['semanager.common.actions.create.element'] = "Create element";
 $_lang['semanager.common.actions.create.element.confirm'] = "Create element?";
+$_lang['semanager.common.actions.create.processing'] = 'Creating elements...';
 
 $_lang['semanager.common.actions.allsync'] = "Synchronize all";
 $_lang['semanager.common.actions.synchronizing'] = "Synchronizing...";

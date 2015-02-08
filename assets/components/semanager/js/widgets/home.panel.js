@@ -5,7 +5,7 @@ SEManager.panel.Home = function(config) {
         ,baseCls: 'modx-formpanel'
         ,cls: 'container form-with-labels'
         ,items: [{
-            html: '<h2>' + _('semanager.title') + ' <sup style="font-size: 0.5em">' + _('semanager.description') + '</sup></h2>'
+            html: '<h2>' + _('semanager.title') + ' </h2><p>' + _('semanager.description') + '</p>'
             ,border: false
             ,cls: 'modx-page-header'
         },{
@@ -32,71 +32,7 @@ SEManager.panel.Home = function(config) {
                     border: false
                     ,bodyCssClass: 'panel-desc'
                     ,items: [{
-                        xtype: 'button'
-                        ,text: _('semanager.common.actions.allsync')
-                        ,icon: MODx.config.template_url + 'images/restyle/icons/refresh.png'
-                        ,cls:'x-btn-text-icon'
-                        ,style: {
-                            paddingLeft: '5px'
-                            ,float: 'left'
-                            ,marginRight: '20px'
-                        }
-                        ,listeners: {
-                            click: function(){
-
-                                Ext.Msg.show({
-                                    title: _('please_wait')
-                                    ,msg: ('Синхронизация')
-                                    ,width: 240
-                                    ,progress:true
-                                    ,closable:false
-                                });
-
-                                MODx.util.Progress.reset();
-                                for(var i = 1; i < 20; i++) {
-                                    setTimeout('MODx.util.Progress.time('+i+','+MODx.util.Progress.id+')',i*1000);
-                                }
-                                MODx.Ajax.request({
-                                    url: SEManager.config.connectorUrl
-                                    ,params: {
-
-                                        action: 'common/syncall'
-                                        ,root: '111111'
-                                    }
-                                    ,listeners: {
-                                        'success': {fn:function(r) {
-                                            MODx.util.Progress.reset();
-                                            Ext.Msg.hide();
-                                        },scope:this}
-                                        ,'failure': {fn:function(r) {
-                                            MODx.util.Progress.reset();
-                                            Ext.Msg.hide();
-                                            MODx.form.Handler.errorJSON(r);
-                                            return false;
-                                        },scope:this}
-                                    }
-                                });
-
-                                /*
-                                Ext.Ajax.request({
-                                    url: SEManager.config.connectorUrl
-                                    ,success: function(response) {
-                                        //
-
-                                    }
-                                    ,failure: function(response) {
-                                        //
-                                    }
-                                    ,params: {
-                                        action: 'common/syncall'
-                                        ,root: '111111'
-                                    }
-                                });
-                                */
-                            }
-                        }
-                    },{
-                        html: '<p style="background-color: #F7F7F7;">' + _('semanager.sync.description') + '</p>'
+                        html: '<p>' + _('semanager.sync.description') + '</p>'
                         ,border: false
                         ,style: {
                             lineHeight: '30px'
@@ -174,7 +110,7 @@ SEManager.panel.Home = function(config) {
                 }]
             }*/
             ]
-          
+
         }]
     });
     SEManager.panel.Home.superclass.constructor.call(this,config);

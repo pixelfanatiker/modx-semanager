@@ -25,6 +25,70 @@ SEManager.grid.Files = function(config) {
                 }
             }
             ,handler:this.makeElements
+        },{
+            xtype: 'button'
+            ,text: _('semanager.common.actions.allsync')
+            ,icon: MODx.config.template_url + 'images/restyle/icons/refresh.png'
+            ,cls:'x-btn-text-icon'
+            ,style: {
+                paddingLeft: '5px'
+                ,float: 'left'
+                ,marginRight: '20px'
+            }
+            ,listeners: {
+                click: function(){
+
+                    Ext.Msg.show({
+                        title: _('please_wait')
+                        ,msg: _('semanager.common.actions.syncronizing')
+                        ,width: 240
+                        ,progress:true
+                        ,closable:false
+                    });
+
+                    MODx.util.Progress.reset();
+                    for(var i = 1; i < 20; i++) {
+                        setTimeout('MODx.util.Progress.time('+i+','+MODx.util.Progress.id+')',i*1000);
+                    }
+                    MODx.Ajax.request({
+                        url: SEManager.config.connectorUrl
+                        ,params: {
+
+                            action: 'common/syncall'
+                            ,root: '111111'
+                        }
+                        ,listeners: {
+                            'success': {fn:function(r) {
+                                MODx.util.Progress.reset();
+                                Ext.Msg.hide();
+                            },scope:this}
+                            ,'failure': {fn:function(r) {
+                                MODx.util.Progress.reset();
+                                Ext.Msg.hide();
+                                MODx.form.Handler.errorJSON(r);
+                                return false;
+                            },scope:this}
+                        }
+                    });
+
+                    /*
+                     Ext.Ajax.request({
+                     url: SEManager.config.connectorUrl
+                     ,success: function(response) {
+                     //
+
+                     }
+                     ,failure: function(response) {
+                     //
+                     }
+                     ,params: {
+                     action: 'common/syncall'
+                     ,root: '111111'
+                     }
+                     });
+                     */
+                }
+            }
         }];
     }
     config.tbar.push('->',{

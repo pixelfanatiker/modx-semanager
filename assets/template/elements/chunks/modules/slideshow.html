@@ -1,0 +1,11 @@
+<div class="cycle-slideshow"
+     data-cycle-fx=scrollHorz
+     data-cycle-timeout=0
+     data-cycle-pager=".custom-pager"
+     data-cycle-pager-template=""
+     data-cycle-slides=">span">
+  [[!getImageList? &tvname=`productSlideshow` &tpl=`[[+tpl]]`]]
+</div>
+<div class="custom-pager cycle-pager external">
+  [[!getImageList? &tvname=`productSlideshow` &tpl=`slideshow_item_pager`]]
+</div>

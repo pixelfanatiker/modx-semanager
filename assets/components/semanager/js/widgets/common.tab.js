@@ -4,8 +4,7 @@ SEManager.panel.CommonTab = function(config) {
         id: 'semanager-tab-common'
         ,bodyCssClass: 'panel-desc'
         ,border: false
-        //,html: '<p>'+_('semanager.description')+'</p>'
-        ,html: '<p>Категории элементов, которые следует исключать при отображении, обновлении, синхронизации.</p>'
+        ,html: '<p>'+_('semanager.description')+'</p>'
 
     });
     SEManager.panel.CommonTab.superclass.constructor.call(this,config);

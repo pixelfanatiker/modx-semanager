@@ -71,4 +71,13 @@ $settings[6]->fromArray(array(
     'area' => 'Other',
 ),'',true,true);
 
+$settings[7]= $modx->newObject('modSystemSetting');
+$settings[7]->fromArray(array(
+    'key' => 'semanager.use_suffix_only',
+    'value' => false,
+    'xtype' => 'combo-boolean',
+    'namespace' => 'semanager',
+    'area' => 'Files',
+),'',true,true);
+
 return $settings;

@@ -21,7 +21,7 @@
  * @subpackage lexicon
  *
  */
- 
+
 $_lang['semanager.title'] = 'SE Manager';
 $_lang['semanager.description'] = 'Manager for extra control of Static Elements';
 $_lang['semanager.sync.description'] = "Synchronizes all elements and scans directory for new files";
@@ -39,6 +39,7 @@ $_lang['semanager.common.actions.create.element'] = "Create element";
 $_lang['semanager.common.actions.create.element.confirm'] = "Create element?";
 
 $_lang['semanager.common.actions.allsync'] = "Synchronize all";
+$_lang['semanager.common.actions.synchronizing'] = "Synchronizing...";
 
 $_lang['semanager.elements.filter_by_name'] = "Filter by name";
 $_lang['semanager.elements.filter_by_category'] = "Filter by category";

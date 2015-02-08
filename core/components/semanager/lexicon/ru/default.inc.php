@@ -21,9 +21,9 @@
  * @subpackage lexicon
  *
  */
- 
+
 $_lang['semanager.title'] = 'SE Manager';
-$_lang['semanager.description'] = 'Модуль расширенного контроля статических элементов';
+$_lang['semanager.description'] = 'атегории элементов, которые следует исключать при отображении, обновлении, синхронизации.';
 $_lang['semanager.sync.description'] = "Синхронизирует все элементы и сканирует папку на наличие новых файлов";
 
 //-- chunks, plugins, shippets, templates - default in core lexicon
@@ -39,6 +39,7 @@ $_lang['semanager.common.actions.create.element'] = "Создание элеме
 $_lang['semanager.common.actions.create.element.confirm'] = "Вы действительно хотите создать элемент из данного файла?";
 
 $_lang['semanager.common.actions.allsync'] = "Синхронизировать все";
+$_lang['semanager.common.actions.synchronizing'] = "Синхронизация...";
 
 $_lang['semanager.elements.filter_by_name'] = "Фильтр по имени";
 $_lang['semanager.elements.filter_by_category'] = "Фильтр по категории";

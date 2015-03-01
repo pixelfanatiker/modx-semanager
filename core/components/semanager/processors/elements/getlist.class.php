@@ -50,14 +50,12 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor {
         }
 
         $data['results'] = $this->modx->getCollection($this->classKey, $c);
-
         $data['results'] = $this->checkElementIfIsChanged($data['results']);
 
         foreach ($data['results'] as $result) {
             $resultItem = $result->toArray();
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [getData] : ' . print_r($resultItem, true));
+            //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [getData] : ' . print_r($resultItem, true));
         }
-
         return $data;
     }
 
@@ -69,7 +67,6 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor {
         return $object->toArray();
     }
 
-
     /**
      * @param $results
      * @return mixed
@@ -77,14 +74,21 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor {
     public function checkElementIfIsChanged ($results) {
 
         foreach ($results as $result) {
-            //$resultItem = $result->toArray();
             $content = sha1($result->get('content'));
-            $contentNew = sha1_file($result->get('static_file'));
 
+            $file = $result->get('static_file');
+            //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [file] ' . $file);
+
+            if(!file_exists($file)) {
+                $contentNew = "File not found";
+                //die("File not found");
+            } else {
+                $contentNew = sha1_file($file);
+            }
 
             $actionDelete = json_decode('{"className":"times","text":"Löschen"}');
             $actionUpdate = json_decode('{"className":"refresh","text":"Aktualisieren"}');
-
+            $statusUpdate = json_decode('{"className":"refresh","text":"Aktualisieren"}');
 
             if ($contentNew) {
                 if($content != $contentNew) {
@@ -99,12 +103,11 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor {
                 $result->set('actions', array($actionDelete, $actionUpdate));
             }
 
-
-            //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [getData] : ' . print_r($resultItem, true));
+            // TODO: Optimize Status
+            //$fileName = array_reverse ($file)[0];
+            //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [getData] : ' . $fileName);
         }
-
         return $results;
     }
-
 }
 return 'modSEManagerGetListOfElementsProcessor';

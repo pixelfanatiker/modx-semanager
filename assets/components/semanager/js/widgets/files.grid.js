@@ -286,7 +286,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
     }
 */
     ,onDirty: function(){
-        console.log(this.config.panel);
+        //console.log(this.config.panel);
 
         if (this.config.panel) {
             Ext.getCmp(this.config.panel).fireEvent('fieldChange');

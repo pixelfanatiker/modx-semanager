@@ -70,11 +70,17 @@ SEManager.grid.Elements = function(config) {
         columns: [this.exp,{
             header: _('id')
             ,dataIndex: 'id'
-            ,width: 15
+            ,width: 10
+        },{
+          header: _('status')
+            ,dataIndex: 'status'
+            ,width: 10
+            ,sortable: true
+            ,renderer: { fn: this._renderStatus ,scope:this }
         },{
             header: _('actions')
             ,dataIndex: 'actions'
-            ,width: 20
+            ,width: 30
             ,sortable: true
             ,renderer: { fn: this._renderActions ,scope:this }
         },{
@@ -126,7 +132,7 @@ SEManager.grid.Elements = function(config) {
 
     Ext.applyIf(config,{
         cm: this.cm
-        ,fields: ['id', 'actions', 'name', 'static','static_file', 'description','category','snippet','plugincode','templatename','content','disabled']
+        ,fields: ['id', 'status', 'actions', 'name', 'static','static_file', 'description','category','snippet','plugincode','templatename','content','disabled']
         ,id: 'semanager-grid-elements-' + config.type + 's'
         ,url: SEManager.config.connectorUrl
         ,baseParams: {
@@ -255,10 +261,23 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         console.log(rec.data);
         return this.tplActions.apply(rec.data);
     }
+    ,_renderStatus: function(v,md,rec) {
+        console.log(v);
+        console.log(md);
+        console.log(rec.data);
+        return this.tplStatus.apply(rec.data);
+    }
     ,_makeTemplates: function() {
         this.tplActions = new Ext.XTemplate('<tpl for=".">' +
-        '<div>' +
+        '<div class="holder actions">' +
         '<tpl for="actions">' +
+        '<i class="controlLink icon icon-{className}" title="{text}"></i>' +
+        '</tpl>' +
+        '</div>' +
+        '</tpl>');
+        this.tplStatus = new Ext.XTemplate('<tpl for=".">' +
+        '<div class="holder status">' +
+        '<tpl for="status">' +
         '<i class="controlLink icon icon-{className}" title="{text}"></i>' +
         '</tpl>' +
         '</div>' +

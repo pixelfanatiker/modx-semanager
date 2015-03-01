@@ -1,0 +1,30 @@
+.holder {
+  bottom: 8px;
+  margin: 0;
+  overflow: visible;
+  position: absolute;
+}
+.actions .controlLink {
+  width: 24px;
+  color: #757575;
+}
+
+.holder .controlLink[class*="icon-"] {
+  font-size: 16px;
+}
+
+.actions .controlLink[class$="disabled"] {
+  color: #d6d6d6;
+}
+
+
+
+.holder .icon-check-circle {
+  color: #9ebd2e;
+}
+.holder .icon-question-circle {
+  color: #EA981C;
+}
+.holder .icon-exclamation-circle {
+  color: #c13a1b;
+}

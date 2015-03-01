@@ -1,6 +1,7 @@
 <?php
 
-class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor {
+class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor
+{
     //public $permission = '';
     public $defaultSortField = 'name';
 
@@ -15,38 +16,38 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor {
         $cf = $this->getProperty('categoryfilter');
 
         $type = $this->getProperty('type');
-        $this->classKey = 'mod'.ucfirst($type);
+        $this->classKey = 'mod' . ucfirst($type);
 
         $limit = intval($this->getProperty('limit'));
         $start = intval($this->getProperty('start'));
 
         $c = $this->modx->newQuery($this->classKey);
 
-        if(!empty($nf)){
-            $key_filter = ($this->classKey=='modTemplate')?'templatename':'name';
-            $c->where(array($key_filter.':LIKE'=>'%'.$nf.'%'));
+        if (!empty($nf)) {
+            $key_filter = ($this->classKey == 'modTemplate') ? 'templatename' : 'name';
+            $c->where(array($key_filter . ':LIKE' => '%' . $nf . '%'));
         }
 
-        if(!empty($cf)){
-            $c->where(array('category'=>$cf));
+        if (!empty($cf)) {
+            $c->where(array('category' => $cf));
         }
 
         $c = $this->prepareQueryBeforeCount($c);
-        $data['total'] = $this->modx->getCount($this->classKey,$c);
+        $data['total'] = $this->modx->getCount($this->classKey, $c);
         $c = $this->prepareQueryAfterCount($c);
 
         $sortField = $this->getProperty('sort');
-        $sortField = ($sortField == 'name' and $this->classKey=='modTemplate')?'templatename':'name';
+        $sortField = ($sortField == 'name' and $this->classKey == 'modTemplate') ? 'templatename' : 'name';
 
         $sortClassKey = $this->getSortClassKey();
-        $sortKey = $this->modx->getSelectColumns($sortClassKey,$this->getProperty('sortAlias',$sortClassKey),'',array($sortField));
+        $sortKey = $this->modx->getSelectColumns($sortClassKey, $this->getProperty('sortAlias', $sortClassKey), '', array($sortField));
         if (empty($sortKey)) $sortKey = $sortField;
         //$c->sortby($sortKey,$this->getProperty('dir'));
 
         $c->sortby('static', 'ASC');
 
         if ($limit > 0) {
-            $c->limit($limit,$start);
+            $c->limit($limit, $start);
         }
 
         $data['results'] = $this->modx->getCollection($this->classKey, $c);
@@ -71,37 +72,48 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor {
      * @param $results
      * @return mixed
      */
-    public function checkElementIfIsChanged ($results) {
+    public function checkElementIfIsChanged($results) {
 
         foreach ($results as $result) {
             $content = sha1($result->get('content'));
 
             $file = $result->get('static_file');
-            //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [file] ' . $file);
 
-            if(!file_exists($file)) {
+
+            if (!file_exists($file)) {
                 $contentNew = "File not found";
-                //die("File not found");
             } else {
                 $contentNew = sha1_file($file);
             }
 
-            $actionDelete = json_decode('{"className":"times","text":"Löschen"}');
-            $actionUpdate = json_decode('{"className":"refresh","text":"Aktualisieren"}');
-            $statusUpdate = json_decode('{"className":"refresh","text":"Aktualisieren"}');
+            $actionDeleteElement = json_decode('{"className":"times js_deleteChunk","text":"Delete file and remove element"}');
+            $actionRemoveElement = json_decode('{"className":"trash js_removeChunk","text":"Remove"}');
+            $actionUpdateElement = json_decode('{"className":"refresh js_updateChunk","text":"Update"}');
 
-            if ($contentNew) {
-                if($content != $contentNew) {
-                    $result->set('status', 'changed');
-                    $result->set('actions', array($actionDelete, $actionUpdate));
-                } else {
-                    $result->set('status', 'unchanged');
-                    $result->set('actions', array($actionDelete));
-                }
+            $actionDeleteElementDisabled = json_decode('{"className":"times disabled","text":"Delete file and remove element"}');
+            $actionRemoveElementDisabled = json_decode('{"className":"trash disabled","text":"Remove"}');
+            $actionUpdateElementDisabled = json_decode('{"className":"refresh disabled","text":"Update"}');
+
+            $statusUnchanged = json_decode('{"className":"check-circle","text":"File unchanged"}');
+            $statusChanged = json_decode('{"className":"question-circle","text":"File changed"}');
+            $statusDeleted = json_decode('{"className":"exclamation-circle","text":"File removed"}');
+
+            $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [contentNew] ' . $contentNew);
+
+            if ($contentNew == "File not found") {
+                $result->set('status', $statusDeleted);
+                $result->set('actions', array($actionDeleteElementDisabled, $actionRemoveElement, $actionUpdateElementDisabled));
+
             } else {
-                $result->set('status', 'deleted');
-                $result->set('actions', array($actionDelete, $actionUpdate));
+                if ($content != $contentNew) {
+                    $result->set('status', $statusChanged);
+                    $result->set('actions', array($actionDeleteElement, $actionRemoveElement, $actionUpdateElement));
+                } else {
+                    $result->set('status', $statusUnchanged);
+                    $result->set('actions', array($actionDeleteElement, $actionRemoveElement, $actionUpdateElementDisabled));
+                }
             }
+
 
             // TODO: Optimize Status
             //$fileName = array_reverse ($file)[0];
@@ -110,4 +122,5 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor {
         return $results;
     }
 }
+
 return 'modSEManagerGetListOfElementsProcessor';

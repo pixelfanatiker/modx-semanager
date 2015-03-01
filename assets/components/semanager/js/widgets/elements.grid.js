@@ -298,7 +298,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             ,text: 'Are you sure that you want to delete this element from the database and also delete the pysical file?'
             ,url: this.config.url
             ,params: {
-                action: 'mgr/elements/delete'
+                action: 'files/delete.full.class'
                 ,ids: cs
             }
             ,listeners: {
@@ -320,7 +320,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             ,text: 'Are you sure that you really want to delete this element from the database?'
             ,url: this.config.url
             ,params: {
-                action: 'mgr/elements/remove'
+                action: 'elements/remove.class'
                 ,ids: cs
             }
             ,listeners: {
@@ -342,7 +342,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             ,text: 'Are you sure that you really want to delete this element from the database?'
             ,url: this.config.url
             ,params: {
-                action: 'mgr/elements/update'
+                action: 'elements/update.class'
                 ,ids: cs
             }
             ,listeners: {

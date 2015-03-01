@@ -4,20 +4,26 @@
   overflow: visible;
   position: absolute;
 }
-.actions .controlLink {
+.actions .icon {
   width: 24px;
   color: #757575;
 }
 
-.holder .controlLink[class*="icon-"] {
+.holder .icon[class*="icon-"] {
   font-size: 16px;
 }
 
-.actions .controlLink[class$="disabled"] {
-  color: #d6d6d6;
+.actions .icon[class*="icon-"] {
+  cursor: pointer;
+  transition: color .25s ease-in-out;
 }
-
-
+.actions .icon[class*="icon-"]:not("disabled"):hover {
+  color: #333;
+}
+.actions .icon[class$="disabled"] {
+  color: #d6d6d6;
+  cursor: default;
+}
 
 .holder .icon-check-circle {
   color: #9ebd2e;

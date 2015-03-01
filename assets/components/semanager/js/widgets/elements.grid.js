@@ -72,7 +72,7 @@ SEManager.grid.Elements = function(config) {
             ,dataIndex: 'id'
             ,width: 10
         },{
-          header: _('status')
+            header: _('status')
             ,dataIndex: 'status'
             ,width: 10
             ,sortable: true
@@ -131,12 +131,12 @@ SEManager.grid.Elements = function(config) {
     });
 
     Ext.applyIf(config,{
-        cm: this.cm
+         cm: this.cm
         ,fields: ['id', 'status', 'actions', 'name', 'static','static_file', 'description','category','snippet','plugincode','templatename','content','disabled']
         ,id: 'semanager-grid-elements-' + config.type + 's'
         ,url: SEManager.config.connectorUrl
         ,baseParams: {
-            action: 'elements/getlist'
+             action: 'elements/getlist'
             ,type: config.type
         }
         ,clicksToEdit: 2
@@ -162,6 +162,7 @@ SEManager.grid.Elements = function(config) {
 Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
 
     renderDynField: function(v,md,rec,ri,ci,s,g) {
+        console.log("renderDynField");
         var r = s.getAt(ri).data;
         var f,idx;
         var oz = v;
@@ -231,12 +232,22 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         this.refresh();
     }
     ,getMenu: function() {
-        var m = [];
-        m.push({
+        console.log("get menu");
+        var m = [{
+             text: '<i class="icon icon-times js_deleteElement"></i>'
+            ,handler: this.deleteSelectedElement
+        },{
+            text: '<i class="icon icon-trash js_removeElement"></i>'
+            ,handler: this.removeSelectedElement
+        },{
+            text: '<i class="icon icon-refresh js_updateElement"></i>'
+            ,handler: this.xx
+        },{
             text: _('quick_update_' + this.config.type)
             ,handler: this.updateElement
-        });
+        }];
         this.addContextMenuItem(m);
+        return m;
     }
     ,updateElement: function(btn,e){
         var r = this.menu.record;
@@ -256,32 +267,112 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         que.show(e.target);
     }
     ,_renderActions: function(v,md,rec) {
-        console.log(v);
-        console.log(md);
-        console.log(rec.data);
         return this.tplActions.apply(rec.data);
     }
     ,_renderStatus: function(v,md,rec) {
-        console.log(v);
-        console.log(md);
-        console.log(rec.data);
         return this.tplStatus.apply(rec.data);
     }
     ,_makeTemplates: function() {
         this.tplActions = new Ext.XTemplate('<tpl for=".">' +
         '<div class="holder actions">' +
         '<tpl for="actions">' +
-        '<i class="controlLink icon icon-{className}" title="{text}"></i>' +
+        '<i class="icon icon-{className}" title="{text}"></i>' +
         '</tpl>' +
         '</div>' +
         '</tpl>');
         this.tplStatus = new Ext.XTemplate('<tpl for=".">' +
         '<div class="holder status">' +
         '<tpl for="status">' +
-        '<i class="controlLink icon icon-{className}" title="{text}"></i>' +
+        '<i class="icon icon-{className}" title="{text}"></i>' +
         '</tpl>' +
         '</div>' +
         '</tpl>');
+    }
+
+    ,deleteSelectedElement: function(btn,e) {
+        var cs = this.getSelectedAsList();
+        if (cs === false) return false;
+
+        MODx.msg.confirm({
+            title: 'Delete file and remove element'
+            ,text: 'Are you sure that you want to delete this element from the database and also delete the pysical file?'
+            ,url: this.config.url
+            ,params: {
+                action: 'mgr/elements/delete'
+                ,ids: cs
+            }
+            ,listeners: {
+                'success': {fn:function(r) {
+                    this.getSelectionModel().clearSelections(true);
+                    this.refresh();
+                } ,scope: this }
+            }
+        });
+        return true;
+    }
+
+    ,removeSelectedElement: function(btn,e) {
+        var cs = this.getSelectedAsList();
+        if (cs === false) return false;
+
+        MODx.msg.confirm({
+            title: 'Remove element'
+            ,text: 'Are you sure that you really want to delete this element from the database?'
+            ,url: this.config.url
+            ,params: {
+                action: 'mgr/elements/remove'
+                ,ids: cs
+            }
+            ,listeners: {
+                'success': {fn:function(r) {
+                    this.getSelectionModel().clearSelections(true);
+                    this.refresh();
+                } ,scope: this }
+            }
+        });
+        return true;
+    }
+
+    ,updateSelectedElement: function(btn,e) {
+        var cs = this.getSelectedAsList();
+        if (cs === false) return false;
+
+        MODx.msg.confirm({
+            title: 'Update element'
+            ,text: 'Are you sure that you really want to delete this element from the database?'
+            ,url: this.config.url
+            ,params: {
+                action: 'mgr/elements/update'
+                ,ids: cs
+            }
+            ,listeners: {
+                'success': {fn:function(r) {
+                    this.getSelectionModel().clearSelections(true);
+                    this.refresh();
+                } ,scope: this }
+            }
+        });
+        return true;
+    }
+
+    ,onClick: function(e){
+        var t = e.getTarget();
+        var elm = t.className.split(' ')[2];
+        if(elm == 'controlBtn' || elm == 'js_actionLink') {
+            var action = t.className.split(' ')[3];
+            var record = this.getSelectionModel().getSelected();
+            this.menu.record = record;
+            console.log("click: " + action);
+
+            switch (action) {
+                case 'js_deleteElement': this.deleteSelectedElement(); break;
+                case 'js_removeElement': this.removeSelectedElement(); break;
+                case 'js_updateElement': this.updateSelectedElement(); break;
+                default:
+                    //window.location = record.data.edit_action;
+                    break;
+            }
+        }
     }
 });
 

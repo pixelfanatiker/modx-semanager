@@ -86,9 +86,9 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor
                 $contentNew = sha1_file($file);
             }
 
-            $actionDeleteElement = json_decode('{"className":"times js_deleteChunk","text":"Delete file and remove element"}');
-            $actionRemoveElement = json_decode('{"className":"trash js_removeChunk","text":"Remove"}');
-            $actionUpdateElement = json_decode('{"className":"refresh js_updateChunk","text":"Update"}');
+            $actionDeleteElement = json_decode('{"className":"times js_actionLink js_deleteElement","text":"Delete file and remove element"}');
+            $actionRemoveElement = json_decode('{"className":"trash js_actionLink js_removeElement","text":"Remove"}');
+            $actionUpdateElement = json_decode('{"className":"refresh js_actionLink js_updateElement","text":"Update"}');
 
             $actionDeleteElementDisabled = json_decode('{"className":"times disabled","text":"Delete file and remove element"}');
             $actionRemoveElementDisabled = json_decode('{"className":"trash disabled","text":"Remove"}');

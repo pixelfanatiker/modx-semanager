@@ -183,7 +183,10 @@ class SEManager
      */
     public function checkNewFileForElement ($file) {
 
+        $path = $this->getFilePath();
+
         $fileName = array_reverse (explode ('.', array_pop (explode ('/', $file))));
+        $filePath = array_reverse (explode ('/', str_replace ($path, '', $file)));
 
         if (count ($fileName) <= 1) return false; // if file not have extension
 
@@ -196,42 +199,76 @@ class SEManager
 
         $fileExtension = implode ('.', array_reverse (array_slice ($fileName, 0, $position)));
 
-        //$this->modx->log (xPDO::LOG_LEVEL_ERROR, '[se manager] [$fileName]      ' . $fileName[0]);
-        //$this->modx->log (xPDO::LOG_LEVEL_ERROR, '[se manager] [$fileExtension] ' . $fileExtension);
+        $fileType = $this->getFileType($filePath);
 
-        $fileSuffixChunk = $this->modx->getOption ('semanager.filename_tpl_chunk', null, 'ch.html');
+        //$this->modx->log (xPDO::LOG_LEVEL_ERROR, '[SEM] fileName: ' . $file);
+        //$this->modx->log (xPDO::LOG_LEVEL_ERROR, '[SEM] fileType: ' . $fileType);
 
-        //$this->modx->log (xPDO::LOG_LEVEL_ERROR, '[se manager] [$fileSuffixChunk] ' . $fileSuffixChunk);
+        $fileNameTmp = $fileName[count($fileName) - 1];
+        $this->modx->log (xPDO::LOG_LEVEL_ERROR, '[SEM] ' . $fileType . ' ' . $fileNameTmp . '.' . $fileExtension);
 
-        if ($fileExtension === $fileSuffixChunk) {
+        $useCategories  = $this->modx->getOption ('semanager.use_categories', null, true);
+        if ($useCategories) {
 
-            //$this->modx->log (xPDO::LOG_LEVEL_ERROR, '[se manager] [$file] ' . $file);
+            if ($fileType == "chunks") {
+                if (!is_object ($this->getStaticFileField($file, 'modChunk'))) {
+                    return true;
+                }
+            }
 
-            if (!is_object ($this->modx->getObject ('modChunk', array ('static' => 1, 'static_file' => $file)))) {
-                return true;
+            if ($fileType == "plugins") {
+                if (!is_object ($this->getStaticFileField($file, 'modPlugin'))) {
+                    return true;
+                }
+            }
+
+            if ($fileType == "snippets") {
+                if (!is_object ($this->getStaticFileField($file, 'modSnippet'))) {
+                    return true;
+                }
+            }
+
+            if ($fileType == "templates") {
+                if (!is_object ($this->getStaticFileField($file, 'modTemplate'))) {
+                    return true;
+                }
+            }
+
+        } else {
+            $fileSuffixChunk = $this->modx->getOption ('semanager.filename_tpl_chunk', null, 'ch.html');
+            $fileSuffixPlugin = $this->modx->getOption ('semanager.filename_tpl_plugin', null, 'pl.php');
+            $fileSuffixSnippet = $this->modx->getOption ('semanager.filename_tpl_snippet', null, 'sn.php');
+            $fileSuffixTemplate = $this->modx->getOption ('semanager.filename_tpl_template', null, 'tp.html');
+
+            if ($fileExtension == $fileSuffixChunk) {
+                $this->modx->log (xPDO::LOG_LEVEL_ERROR, '[SEM] 1 is ' .$fileType);
+                if (!is_object ($this->modx->getObject ('modChunk', array ('static' => 1, 'static_file' => $file)))) {
+                    return true;
+                }
+            }
+
+            if ($fileExtension == $fileSuffixPlugin) {
+                $this->modx->log (xPDO::LOG_LEVEL_ERROR, '[SEM] 2 is ' .$fileType);
+                if (!is_object ($this->modx->getObject ('modPlugin', array ('static' => 1, 'static_file' => $file)))) {
+                    return true;
+                }
+            }
+            $this->modx->log (xPDO::LOG_LEVEL_ERROR, '[SEM] is ' .$fileType);
+            if ($fileExtension == $fileSuffixSnippet) {
+                $this->modx->log (xPDO::LOG_LEVEL_ERROR, '[SEM] 3 is ' .$fileType);
+                if (!is_object ($this->modx->getObject ('modSnippet', array ('static' => 1, 'static_file' => $file)))) {
+                    return true;
+                }
+            }
+
+            if ($fileExtension == $fileSuffixTemplate) {
+                $this->modx->log (xPDO::LOG_LEVEL_ERROR, '[SEM] 4 is ' .$fileType);
+                if (!is_object ($this->modx->getObject ('modTemplate', array ('static' => 1, 'static_file' => $file)))) {
+                    return true;
+                }
             }
         }
 
-        $fileSuffixPlugin = $this->modx->getOption ('semanager.filename_tpl_plugin', null, 'pl.php');
-        if ($fileExtension === $fileSuffixPlugin) {
-            if (!is_object ($this->modx->getObject ('modPlugin', array ('static' => 1, 'static_file' => $file)))) {
-                return true;
-            }
-        }
-
-        $fileSuffixSnippet = $this->modx->getOption ('semanager.filename_tpl_snippet', null, 'sn.php');
-        if ($fileExtension === $fileSuffixSnippet) {
-            if (!is_object ($this->modx->getObject ('modSnippet', array ('static' => 1, 'static_file' => $file)))) {
-                return true;
-            }
-        }
-
-        $fileSuffixTemplate = $this->modx->getOption ('semanager.filename_tpl_template', null, 'tp.html');
-        if ($fileExtension === $fileSuffixTemplate) {
-            if (!is_object ($this->modx->getObject ('modTemplate', array ('static' => 1, 'static_file' => $file)))) {
-                return true;
-            }
-        }
         return false;
     }
 
@@ -241,37 +278,12 @@ class SEManager
     public function getNewFiles () {
         $files = array ();
         foreach ($this->scanElementsFolder () as $file) {
-
-            //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [f] ' . $file);
-
             if ($this->checkNewFileForElement ($file)) {
 
-                //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [f] ' . $f);
+                $path = $this->getFilePath();
 
-
-                // Check, if media source is set
-                $elementsPath = $this->modx->getOption ('semanager.elements_dir', null, '/template/elements/');
-                $useMediaSources = $this->modx->getOption ('semanager.use_mediasources', 0);
-                $path = "";
-
-
-                if ($useMediaSources >= 1) {
-                    $mediaSource = $this->modx->getObject('sources.modMediaSource', $useMediaSources);
-                    if(!empty($mediaSource) && is_object($mediaSource)) {
-                        $path = $mediaSource->prepareOutputUrl($elementsPath);
-                    }
-                } else {
-                    $path = MODX_ASSETS_PATH . $elementsPath;
-                }
-
-                //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [path]  ' . $path);
-
-
-                $typeSeparation = $this->modx->getOption ('semanager.type_separation', null, true);
-                $useCategories = $this->modx->getOption ('semanager.use_categories', null, true);
-
+                $useCategories  = $this->modx->getOption ('semanager.use_categories', null, true);
                 $category = 0;
-                $type = '0';
 
                 $filePath = array_reverse (explode ('/', str_replace ($path, '', $file)));
 
@@ -289,28 +301,17 @@ class SEManager
                     }
                 }
 
-                //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[getNewFiles] [$fullCategory] ' . $fullCategory);
-                //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[getNewFiles] [$category]     ' . $category);
-
                 $filename = array_shift ($filePath);
+                $fileType = $this->getFileType($filePath);
+                $mediaSourceId = $this->modx->getOption('semanager.elements_mediasource', 0);
 
-                //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [getNewFiles] ' . $filename);
-
-                // TODO: добавить дополнительно проверку, если файл не в папке вообще
-                if ($typeSeparation) {
-                    $type = array_pop ($filePath);
-                    if ($type == '') {
-                        $type = 0;
-                    }
-                }
                 $files[] = array (
                         'filename' => $filename,
                         'category' => $category,
-                        'type' => $type,
+                        'type' => $fileType,
                         'path' => $file,
-                        'content' => file_get_contents ($file, true)
-                    //'status' => sha1_file($file)
-
+                        'content' => file_get_contents ($file, true),
+                        'mediasource' => $mediaSourceId
                 );
             }
         }
@@ -659,5 +660,54 @@ class SEManager
         $newObj->save ();
 
         return true;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getFilePath () {
+        $elementsDirectory = $this->modx->getOption('semanager.elements_dir', null, '/template/elements/');
+        $useMediaSources   = $this->modx->getOption('semanager.use_mediasources', 0);
+        $path = "";
+
+        if ($useMediaSources >= 1) {
+            $mediaSourceId = $this->modx->getOption('semanager.elements_mediasource', 1);
+            $mediaSource   = $this->modx->getObject('sources.modMediaSource', $mediaSourceId);
+            if(!empty($mediaSource) && is_object($mediaSource)) {
+                $path = $mediaSource->prepareOutputUrl($elementsDirectory);
+            }
+        } else {
+            $path = $elementsDirectory;
+        }
+        return $path;
+    }
+
+
+    /**
+     * @param $filePath
+     * @return int|mixed|string
+     */
+    public function getFileType ($filePath) {
+        // TODO: добавить дополнительно проверку, если файл не в папке вообще
+        // TODO: check, if the file is existing in the folder
+        $type = '0';
+        $typeSeparation = $this->modx->getOption ('semanager.type_separation', null, true);
+        if ($typeSeparation) {
+            $type = array_pop ($filePath);
+            if ($type == '') {
+                $type = 0;
+            }
+        }
+        return $type;
+    }
+
+    /**
+     * @param $file
+     * @param $modClass
+     * @return null|object
+     */
+    public function getStaticFileField ($file, $modClass) {
+        $element = $this->modx->getObject ($modClass, array ('static' => 1, 'static_file' => $file));
+        return $element;
     }
 }

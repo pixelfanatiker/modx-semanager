@@ -133,30 +133,31 @@ SEManager.grid.Files = function(config) {
 
     this.cm = new Ext.grid.ColumnModel({
         columns: [this.exp,{
-            header: _('status')
+             header: _('status')
             ,dataIndex: 'status'
-            ,width: 20
+            ,width: 10
             ,sortable: true
+            ,renderer: { fn: this._renderStatus ,scope:this }
         },{
-            header: _('name')
+             header: _('name')
             ,dataIndex: 'filename'
             ,width: 30
             ,sortable: false
         },{
-            header: _('category')
+             header: _('category')
             ,dataIndex: 'category'
             ,width: 30
             ,sortable: false
             ,renderer: this.categoryRender
         },{
-            header: _('type')
+             header: _('type')
             ,dataIndex: 'type'
             ,width: 30
             ,sortable: false
             ,editable: false
             ,renderer: this.typeRender
         },{
-            header: _('path')
+             header: _('path')
             ,dataIndex: 'path'
             ,sortable: false
             ,editable: false
@@ -218,25 +219,21 @@ SEManager.grid.Files = function(config) {
 
     });
     SEManager.grid.Files.superclass.constructor.call(this, config);
+    this._makeTemplates();
 };
 
 
 Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
 
     typeRender: function(r) {
-
         if(r == 0){
             return 'no_type';
         }
-
         return r;
-
     }
 
     ,categoryRender: function(r) {
-
         //console.log(r);
-
         if(r == 0){
             return _('no_category');
         }
@@ -391,7 +388,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
             }
         });
     }
-    ,makeElements: function(btn,e){
+    ,makeElements: function(btn,e) {
          Ext.Msg.show({
              title: _('please_wait')
              ,msg: ('semanager.common.actions.create.processing')
@@ -423,9 +420,102 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
                      return false;
                  },scope:this}
              }
-
          });
+    }
 
+    ,_renderStatus: function(v,md,rec) {
+        return this.tplStatus.apply(rec.data);
+    }
+
+    ,_makeTemplates: function() {
+        this.tplActions = new Ext.XTemplate('<tpl for=".">' +
+        '<div class="holder actions">' +
+        '<tpl for="actions">' +
+        '<i class="icon icon-{className}" title="{text}"></i>' +
+        '</tpl>' +
+        '</div>' +
+        '</tpl>');
+        this.tplStatus = new Ext.XTemplate('<tpl for=".">' +
+        '<div class="holder status">' +
+        '<tpl for="status">' +
+        '<i class="icon icon-{className}" title="{text}"></i>' +
+        '</tpl>' +
+        '</div>' +
+        '</tpl>');
+    }
+
+    ,deleteSelectedElement: function(btn,e) {
+        MODx.msg.confirm({
+            title: 'Delete file and remove element'
+            ,text: 'Are you sure that you want to delete this element from the database and also delete the pysical file?'
+            ,url: this.config.url
+            ,params: {
+                action: 'elements/delete.class'
+                ,id: this.menu.record.id
+            }
+            ,listeners: {
+                'success': {fn:function(r) {
+                    this.refresh();
+                } ,scope: this }
+            }
+        });
+        return true;
+    }
+
+    ,removeSelectedElement: function(btn,e) {
+        MODx.msg.confirm({
+            title: 'Remove element'
+            ,text: 'Are you sure that you really want to delete this element from the database?'
+            ,url: this.config.url
+            ,params: {
+                action: 'elements/remove.class'
+                ,id: this.menu.record.id
+            }
+            ,listeners: {
+                'success': {fn:function(r) {
+                    this.refresh();
+                } ,scope: this }
+            }
+        });
+        return true;
+    }
+
+    ,updateSelectedElement: function(btn,e) {
+        MODx.msg.confirm({
+            title: 'Update element'
+            ,text: 'Are you sure that you really want to delete this element from the database?'
+            ,url: this.config.url
+            ,params: {
+                action: 'elements/update.class'
+                ,id: this.menu.record.id
+            }
+            ,listeners: {
+                'success': {fn:function(r) {
+                    this.refresh();
+                } ,scope: this }
+            }
+        });
+        return true;
+    }
+
+    ,onClick: function(e){
+        var target = e.getTarget();
+        var element = target.className.split(' ')[2];
+        if(element === 'js_actionButton' || element === 'js_actionLink') {
+            var action = target.className.split(' ')[3];
+            var record = this.getSelectionModel().getSelected();
+            this.menu.record = record;
+            console.log("click: " + element + " action: " + action);
+
+            switch (action) {
+                case 'js_deleteElement': this.deleteSelectedElement(); break;
+                case 'js_removeElement': this.removeSelectedElement(); break;
+                case 'js_updateElement': this.updateSelectedElement(); break;
+                default:
+                    //window.location = record.data.edit_action;
+                    break;
+            }
+        }
     }
 });
 

@@ -234,15 +234,6 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     ,getMenu: function() {
         console.log("get menu");
         var m = [{
-             text: '<i class="icon icon-times js_deleteElement"></i>'
-            ,handler: this.deleteSelectedElement
-        },{
-            text: '<i class="icon icon-trash js_removeElement"></i>'
-            ,handler: this.removeSelectedElement
-        },{
-            text: '<i class="icon icon-refresh js_updateElement"></i>'
-            ,handler: this.xx
-        },{
             text: _('quick_update_' + this.config.type)
             ,handler: this.updateElement
         }];
@@ -272,6 +263,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     ,_renderStatus: function(v,md,rec) {
         return this.tplStatus.apply(rec.data);
     }
+
     ,_makeTemplates: function() {
         this.tplActions = new Ext.XTemplate('<tpl for=".">' +
         '<div class="holder actions">' +
@@ -290,20 +282,16 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
 
     ,deleteSelectedElement: function(btn,e) {
-        var cs = this.getSelectedAsList();
-        if (cs === false) return false;
-
         MODx.msg.confirm({
-            title: 'Delete file and remove element'
+             title: 'Delete file and remove element'
             ,text: 'Are you sure that you want to delete this element from the database and also delete the pysical file?'
             ,url: this.config.url
             ,params: {
-                action: 'files/delete.full.class'
-                ,ids: cs
+                 action: 'elements/delete.class'
+                ,id: this.menu.record.id
             }
             ,listeners: {
                 'success': {fn:function(r) {
-                    this.getSelectionModel().clearSelections(true);
                     this.refresh();
                 } ,scope: this }
             }
@@ -312,20 +300,16 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
 
     ,removeSelectedElement: function(btn,e) {
-        var cs = this.getSelectedAsList();
-        if (cs === false) return false;
-
         MODx.msg.confirm({
             title: 'Remove element'
             ,text: 'Are you sure that you really want to delete this element from the database?'
             ,url: this.config.url
             ,params: {
-                action: 'elements/remove.class'
-                ,ids: cs
+                 action: 'elements/remove.class'
+                ,id: this.menu.record.id
             }
             ,listeners: {
                 'success': {fn:function(r) {
-                    this.getSelectionModel().clearSelections(true);
                     this.refresh();
                 } ,scope: this }
             }
@@ -334,20 +318,16 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
 
     ,updateSelectedElement: function(btn,e) {
-        var cs = this.getSelectedAsList();
-        if (cs === false) return false;
-
         MODx.msg.confirm({
             title: 'Update element'
             ,text: 'Are you sure that you really want to delete this element from the database?'
             ,url: this.config.url
             ,params: {
-                action: 'elements/update.class'
-                ,ids: cs
+                 action: 'elements/update.class'
+                ,id: this.menu.record.id
             }
             ,listeners: {
                 'success': {fn:function(r) {
-                    this.getSelectionModel().clearSelections(true);
                     this.refresh();
                 } ,scope: this }
             }
@@ -356,13 +336,13 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
 
     ,onClick: function(e){
-        var t = e.getTarget();
-        var elm = t.className.split(' ')[2];
-        if(elm == 'controlBtn' || elm == 'js_actionLink') {
-            var action = t.className.split(' ')[3];
+        var target = e.getTarget();
+        var element = target.className.split(' ')[2];
+        if(element === 'js_actionButton' || element === 'js_actionLink') {
+            var action = target.className.split(' ')[3];
             var record = this.getSelectionModel().getSelected();
             this.menu.record = record;
-            console.log("click: " + action);
+            console.log("click: " + element + " action: " + action);
 
             switch (action) {
                 case 'js_deleteElement': this.deleteSelectedElement(); break;

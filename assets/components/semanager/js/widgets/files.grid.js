@@ -133,11 +133,11 @@ SEManager.grid.Files = function(config) {
 
     this.cm = new Ext.grid.ColumnModel({
         columns: [this.exp,{
-             header: _('status')
-            ,dataIndex: 'status'
-            ,width: 10
+             header: _('actions')
+            ,dataIndex: 'actions'
+            ,width: 30
             ,sortable: true
-            ,renderer: { fn: this._renderStatus ,scope:this }
+            ,renderer: { fn: this._renderActions ,scope:this }
         },{
              header: _('name')
             ,dataIndex: 'filename'
@@ -194,7 +194,7 @@ SEManager.grid.Files = function(config) {
 
     Ext.applyIf(config,{
         cm: this.cm
-        ,fields: ['status','filename','category','type', 'path','content']
+        ,fields: ['actions','filename','category','type', 'path','content']
         ,id: 'semanager-grid-elements-files'
         ,url: SEManager.config.connectorUrl
         ,baseParams: {
@@ -215,9 +215,8 @@ SEManager.grid.Files = function(config) {
                 e.record.data.type = config.type;
             }}
         }
-
-
     });
+
     SEManager.grid.Files.superclass.constructor.call(this, config);
     this._makeTemplates();
 };
@@ -291,7 +290,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
     }
     ,filterByType: function(type, selected){
         this.getStore().baseParams = {
-            action: 'files/getlist'
+             action: 'files/getlist'
             ,type: selected.id
         };
         this.getBottomToolbar().changePage(1);
@@ -323,8 +322,8 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
             ,handler: this.makeElement
         });
         m.push({
-            text: _('semanager.common.actions.quickupdatefile')
-            ,handler: this.updatefile
+            text: _('semanager.common.actions.quickupdateFile')
+            ,handler: this.updateFile
         });
         m.push({
             text: _('semanager.common.actions.deletefile')
@@ -332,14 +331,21 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         });
         this.addContextMenuItem(m);
     }
-    ,deleteFiles: function(btn,e){
+    ,deleteFiles: function(record) {
+        var path;
+        if (typeof record.data !== "undefined") {
+            path = record.data.path;
+        } else {
+            path = this.menu.record.path;
+        }
+
         MODx.msg.confirm({
             title: _('semanager.common.actions.delete')
             ,text: _('semanager.common.actions.deletefileq')
             ,url: this.config.url
             ,params: {
-                action: 'files/delete.class'
-                ,path: this.menu.record.path
+                 action: 'files/delete.class'
+                ,path: path
             }
             ,listeners: {
                 'success': {fn:function(){
@@ -348,7 +354,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
             }
         });
     }
-    ,updatefile: function(btn,e){
+    ,updateFile: function(btn,e){
         var r = this.menu.record;
         r.name = r.filename;
         r.source = '0';
@@ -369,17 +375,25 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         que.reset();
         que.setValues(r);
         que.show(e.target);
-
     }
-    ,makeElement: function(btn,e){
+    ,makeElement: function(record){
+        var path, category;
+        if (typeof record.data !== "undefined") {
+            path = record.data.path;
+            category = record.data.category
+        } else {
+            path = this.menu.record.path;
+            category = this.menu.record.category;
+        }
+
         MODx.msg.confirm({
             title: _('semanager.common.actions.create.element')
             ,text: _('semanager.common.actions.create.element.confirm')
             ,url: this.config.url
             ,params: {
                 action: 'files/makeelement.class'
-                ,path: this.menu.record.path
-                ,category: this.menu.record.category
+                ,path: path
+                ,category: category
             }
             ,listeners: {
                 'success': {fn:function(){
@@ -423,8 +437,8 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
          });
     }
 
-    ,_renderStatus: function(v,md,rec) {
-        return this.tplStatus.apply(rec.data);
+    ,_renderActions: function(v,md,rec) {
+        return this.tplActions.apply(rec.data);
     }
 
     ,_makeTemplates: function() {
@@ -444,60 +458,6 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         '</tpl>');
     }
 
-    ,deleteSelectedElement: function(btn,e) {
-        MODx.msg.confirm({
-            title: 'Delete file and remove element'
-            ,text: 'Are you sure that you want to delete this element from the database and also delete the pysical file?'
-            ,url: this.config.url
-            ,params: {
-                action: 'elements/delete.class'
-                ,id: this.menu.record.id
-            }
-            ,listeners: {
-                'success': {fn:function(r) {
-                    this.refresh();
-                } ,scope: this }
-            }
-        });
-        return true;
-    }
-
-    ,removeSelectedElement: function(btn,e) {
-        MODx.msg.confirm({
-            title: 'Remove element'
-            ,text: 'Are you sure that you really want to delete this element from the database?'
-            ,url: this.config.url
-            ,params: {
-                action: 'elements/remove.class'
-                ,id: this.menu.record.id
-            }
-            ,listeners: {
-                'success': {fn:function(r) {
-                    this.refresh();
-                } ,scope: this }
-            }
-        });
-        return true;
-    }
-
-    ,updateSelectedElement: function(btn,e) {
-        MODx.msg.confirm({
-            title: 'Update element'
-            ,text: 'Are you sure that you really want to delete this element from the database?'
-            ,url: this.config.url
-            ,params: {
-                action: 'elements/update.class'
-                ,id: this.menu.record.id
-            }
-            ,listeners: {
-                'success': {fn:function(r) {
-                    this.refresh();
-                } ,scope: this }
-            }
-        });
-        return true;
-    }
-
     ,onClick: function(e){
         var target = e.getTarget();
         var element = target.className.split(' ')[2];
@@ -505,12 +465,13 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
             var action = target.className.split(' ')[3];
             var record = this.getSelectionModel().getSelected();
             this.menu.record = record;
-            console.log("click: " + element + " action: " + action);
+            //console.log("click: " + element + " action: " + action + " record: " + record.id);
+            //console.log(this.menu.record);
 
             switch (action) {
-                case 'js_deleteElement': this.deleteSelectedElement(); break;
-                case 'js_removeElement': this.removeSelectedElement(); break;
-                case 'js_updateElement': this.updateSelectedElement(); break;
+                case 'js_createElement': this.makeElement(record); break;
+                case 'js_deleteFile': this.deleteFiles(record); break;
+                case 'js_updateElement': this.updateFile(record); break;
                 default:
                     //window.location = record.data.edit_action;
                     break;

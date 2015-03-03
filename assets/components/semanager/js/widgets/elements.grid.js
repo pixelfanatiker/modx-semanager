@@ -156,6 +156,7 @@ SEManager.grid.Elements = function(config) {
             }}
         }
     });
+
     SEManager.grid.Elements.superclass.constructor.call(this, config);
     this._makeTemplates();
 };
@@ -232,13 +233,11 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         this.refresh();
     }
     ,getMenu: function() {
-        console.log("get menu");
         var m = [{
-            text: _('quick_update_' + this.config.type)
+             text: _('quick_update_' + this.config.type)
             ,handler: this.updateElement
         }];
         this.addContextMenuItem(m);
-        return m;
     }
     ,updateElement: function(btn,e){
         var r = this.menu.record;
@@ -257,9 +256,11 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         que.setValues(r);
         que.show(e.target);
     }
+
     ,_renderActions: function(v,md,rec) {
         return this.tplActions.apply(rec.data);
     }
+
     ,_renderStatus: function(v,md,rec) {
         return this.tplStatus.apply(rec.data);
     }
@@ -281,14 +282,23 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         '</tpl>');
     }
 
-    ,deleteSelectedElement: function(btn,e) {
+    ,deleteFileAndElement: function(record) {
+        var id, path;
+        if (typeof record.data !== "undefined") {
+            id = record.data.id;
+            path = record.data.path;
+        } else {
+            id = this.menu.record.id;
+            path = this.menu.record.path;
+        }
         MODx.msg.confirm({
              title: 'Delete file and remove element'
             ,text: 'Are you sure that you want to delete this element from the database and also delete the pysical file?'
             ,url: this.config.url
             ,params: {
                  action: 'elements/delete.class'
-                ,id: this.menu.record.id
+                ,id: id
+                ,path: path
             }
             ,listeners: {
                 'success': {fn:function(r) {
@@ -299,32 +309,20 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         return true;
     }
 
-    ,removeSelectedElement: function(btn,e) {
+    ,deleteElement: function(record) {
+        var id;
+        if (typeof record.data !== "undefined") {
+            id = record.data.id;
+        } else {
+            id = this.menu.record.id;
+        }
         MODx.msg.confirm({
-            title: 'Remove element'
+             title: 'Remove element'
             ,text: 'Are you sure that you really want to delete this element from the database?'
             ,url: this.config.url
             ,params: {
                  action: 'elements/remove.class'
-                ,id: this.menu.record.id
-            }
-            ,listeners: {
-                'success': {fn:function(r) {
-                    this.refresh();
-                } ,scope: this }
-            }
-        });
-        return true;
-    }
-
-    ,updateSelectedElement: function(btn,e) {
-        MODx.msg.confirm({
-            title: 'Update element'
-            ,text: 'Are you sure that you really want to delete this element from the database?'
-            ,url: this.config.url
-            ,params: {
-                 action: 'elements/update.class'
-                ,id: this.menu.record.id
+                ,id: id
             }
             ,listeners: {
                 'success': {fn:function(r) {
@@ -345,9 +343,9 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             console.log("click: " + element + " action: " + action);
 
             switch (action) {
-                case 'js_deleteElement': this.deleteSelectedElement(); break;
-                case 'js_removeElement': this.removeSelectedElement(); break;
-                case 'js_updateElement': this.updateSelectedElement(); break;
+                case 'js_deleteFileElement': this.deleteFileAndElement(record); break;
+                case 'js_deleteElement': this.deleteElement(record); break;
+                case 'js_updateElement': this.updateElement(record); break;
                 default:
                     //window.location = record.data.edit_action;
                     break;

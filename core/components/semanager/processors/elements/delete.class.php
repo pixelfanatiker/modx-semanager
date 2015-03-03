@@ -1,11 +1,12 @@
 <?php
 
-$parameter = $scriptProperties['path'];
+$id =   $scriptProperties['id'];
+$path = $scriptProperties['path'];
 
-if ($parameter) {
-    //unlink($scriptProperties['path']);
+if ($id && $path) {
+    unlink($path);
 
-    $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] remove: ' . $parameter);
+    $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[SEM] delete: ' . $path);
 
     return $modx->error->success('', $item);
 }

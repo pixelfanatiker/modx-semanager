@@ -210,6 +210,7 @@ class SEManager
         $useCategories  = $this->modx->getOption ('semanager.use_categories', null, true);
         if ($useCategories) {
 
+            // @TODO: Refactoring check is object
             if ($fileType == "chunks") {
                 if (!is_object ($this->getStaticFileField($file, 'modChunk'))) {
                     return true;
@@ -276,6 +277,12 @@ class SEManager
      * @return array
      */
     public function getNewFiles () {
+
+        $actionCreateElement = json_decode('{"className":"check-square-o js_actionLink js_createElement","text":"Create element"}');
+        $actionDeleteFile    = json_decode('{"className":"times js_actionLink js_deleteFile","text":"Delete file"}');
+
+        $actions = array($actionCreateElement, $actionDeleteFile);
+
         $files = array ();
         foreach ($this->scanElementsFolder () as $file) {
             if ($this->checkNewFileForElement ($file)) {
@@ -311,7 +318,8 @@ class SEManager
                         'type' => $fileType,
                         'path' => $file,
                         'content' => file_get_contents ($file, true),
-                        'mediasource' => $mediaSourceId
+                        'mediasource' => $mediaSourceId,
+                        'actions' => $actions
                 );
             }
         }

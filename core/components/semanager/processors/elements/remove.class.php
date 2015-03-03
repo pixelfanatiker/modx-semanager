@@ -1,10 +1,9 @@
 <?php
 
-$parameter = $scriptProperties['path'];
+$path = $scriptProperties['path'];
 
-$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] remove: ' . $parameter);
 
-if ($parameter) {
+if ($path) {
 
     return $modx->error->success('', $item);
 }

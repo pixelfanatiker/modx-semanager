@@ -1,36 +1,38 @@
 .holder {
-  bottom: 8px;
   margin: 0;
   overflow: visible;
-  position: absolute;
+}
+.actions {
+  position: relative;
+  bottom: auto;
 }
 .actions .icon {
-  width: 24px;
-  color: #757575;
+  width: 16px;
+  margin-right: 5px;
+  text-align: center;
 }
-
-.holder .icon[class*="icon-"] {
-  font-size: 16px;
-}
-
 .actions .icon[class*="icon-"] {
   cursor: pointer;
+  color: #757575;
   transition: color .25s ease-in-out;
 }
-.actions .icon[class*="icon-"]:not("disabled"):hover {
+.actions .icon[class*="js_actionLink"]:hover {
   color: #333;
 }
 .actions .icon[class$="disabled"] {
   color: #d6d6d6;
   cursor: default;
 }
+.holder .icon[class*="icon-"] {
+  font-size: 16px;
+}
 
-.holder .icon-check-circle {
+.holder .sm-green {
   color: #9ebd2e;
 }
-.holder .icon-question-circle {
+.holder .sm-orange {
   color: #EA981C;
 }
-.holder .icon-exclamation-circle {
+.holder .sm-red {
   color: #c13a1b;
 }

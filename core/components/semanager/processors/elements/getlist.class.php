@@ -79,38 +79,37 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor
 
             $file = $result->get('static_file');
 
-
             if (!file_exists($file)) {
                 $contentNew = "File not found";
             } else {
                 $contentNew = sha1_file($file);
             }
 
-            $actionDeleteElement = json_decode('{"className":"times js_actionLink js_deleteElement","text":"Delete file and remove element"}');
-            $actionRemoveElement = json_decode('{"className":"trash js_actionLink js_removeElement","text":"Remove"}');
-            $actionUpdateElement = json_decode('{"className":"refresh js_actionLink js_updateElement","text":"Update"}');
+            $actionDeleteFileElement = json_decode('{"className":"times js_actionLink js_deleteFileElement","text":"Delete file and remove element"}');
+            $actionDeleteElement = json_decode('{"className":"trash js_actionLink js_deleteElement","text":"Remove element"}');
+            $actionUpdateElement = json_decode('{"className":"refresh js_actionLink js_updateElement","text":"Update element"}');
 
-            $actionDeleteElementDisabled = json_decode('{"className":"times disabled","text":"Delete file and remove element"}');
-            $actionRemoveElementDisabled = json_decode('{"className":"trash disabled","text":"Remove"}');
-            $actionUpdateElementDisabled = json_decode('{"className":"refresh disabled","text":"Update"}');
+            $actionDeleteFileElementDisabled = json_decode('{"className":"times disabled","text":"Delete file and remove element"}');
+            $actionDeleteElementDisabled = json_decode('{"className":"trash disabled","text":"Remove element"}');
+            $actionUpdateElementDisabled = json_decode('{"className":"refresh disabled","text":"Update element"}');
 
-            $statusUnchanged = json_decode('{"className":"check-circle","text":"File unchanged"}');
-            $statusChanged = json_decode('{"className":"question-circle","text":"File changed"}');
-            $statusDeleted = json_decode('{"className":"exclamation-circle","text":"File removed"}');
+            $statusUnchanged = json_decode('{"className":"check-circle sm-green","text":"File unchanged"}');
+            $statusChanged = json_decode('{"className":"question-circle sm-orange","text":"File changed"}');
+            $statusDeleted = json_decode('{"className":"exclamation-circle sm-red","text":"File removed"}');
 
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [contentNew] ' . $contentNew);
+            //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [contentNew] ' . $contentNew);
 
             if ($contentNew == "File not found") {
                 $result->set('status', $statusDeleted);
-                $result->set('actions', array($actionDeleteElementDisabled, $actionRemoveElement, $actionUpdateElementDisabled));
+                $result->set('actions', array($actionDeleteFileElementDisabled, $actionDeleteElement, $actionUpdateElementDisabled));
 
             } else {
                 if ($content != $contentNew) {
                     $result->set('status', $statusChanged);
-                    $result->set('actions', array($actionDeleteElement, $actionRemoveElement, $actionUpdateElement));
+                    $result->set('actions', array($actionDeleteFileElement, $actionDeleteElement, $actionUpdateElement));
                 } else {
                     $result->set('status', $statusUnchanged);
-                    $result->set('actions', array($actionDeleteElement, $actionRemoveElement, $actionUpdateElementDisabled));
+                    $result->set('actions', array($actionDeleteFileElement, $actionDeleteElement, $actionUpdateElementDisabled));
                 }
             }
 

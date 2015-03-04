@@ -87,10 +87,12 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor
 
             $actionDeleteFileElement = json_decode('{"className":"times js_actionLink js_deleteFileElement","text":"Delete file and remove element"}');
             $actionDeleteElement = json_decode('{"className":"trash js_actionLink js_deleteElement","text":"Remove element"}');
+            $actionEditElement = json_decode('{"className":"edit js_actionLink js_editElement","text":"Eidt element"}');
             $actionUpdateElement = json_decode('{"className":"refresh js_actionLink js_updateElement","text":"Update element"}');
 
             $actionDeleteFileElementDisabled = json_decode('{"className":"times disabled","text":"Delete file and remove element"}');
             $actionDeleteElementDisabled = json_decode('{"className":"trash disabled","text":"Remove element"}');
+            $actionEditElementDisabled = json_decode('{"className":"edit disabled","text":"Eidt element"}');
             $actionUpdateElementDisabled = json_decode('{"className":"refresh disabled","text":"Update element"}');
 
             $statusUnchanged = json_decode('{"className":"check-circle sm-green","text":"File unchanged"}');
@@ -101,15 +103,15 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor
 
             if ($contentNew == "File not found") {
                 $result->set('status', $statusDeleted);
-                $result->set('actions', array($actionDeleteFileElementDisabled, $actionDeleteElement, $actionUpdateElementDisabled));
+                $result->set('actions', array($actionDeleteFileElementDisabled, $actionDeleteElement, $actionEditElementDisabled, $actionUpdateElementDisabled));
 
             } else {
                 if ($content != $contentNew) {
                     $result->set('status', $statusChanged);
-                    $result->set('actions', array($actionDeleteFileElement, $actionDeleteElement, $actionUpdateElement));
+                    $result->set('actions', array($actionDeleteFileElement, $actionDeleteElement, $actionEditElement, $actionUpdateElement));
                 } else {
                     $result->set('status', $statusUnchanged);
-                    $result->set('actions', array($actionDeleteFileElement, $actionDeleteElement, $actionUpdateElementDisabled));
+                    $result->set('actions', array($actionDeleteFileElement, $actionDeleteElement, $actionEditElement, $actionUpdateElementDisabled));
                 }
             }
 

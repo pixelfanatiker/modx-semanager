@@ -139,6 +139,11 @@ SEManager.grid.Elements = function(config) {
              action: 'elements/getlist'
             ,type: config.type
         }
+        ,menuConfig: {
+             defaultAlign: 'tl-b?'
+            ,enableScrolling: false
+            ,cls: 'sm-menu'
+        }
         ,clicksToEdit: 2
         ,autosave: true
         ,save_action: 'elements/updatefromgrid'
@@ -234,13 +239,31 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
     ,getMenu: function() {
         var m = [{
-             text: _('quick_update_' + this.config.type)
-            ,handler: this.updateElement
+            text: '<i class="icon icon-times"></i>Delete file and element'
+            ,handler: this.deleteFileAndElement
+        },{
+            text: '<i class="icon icon-trash"></i>Delete element'
+            ,handler: this.deleteElement
+        },{
+             text: '<i class="icon icon-edit"></i>' + _('quick_update_' + this.config.type)
+            ,handler: this.editElement
         }];
         this.addContextMenuItem(m);
     }
-    ,updateElement: function(btn,e){
-        var r = this.menu.record;
+    ,editElement: function(btn,e, record){
+
+        console.log(record);
+
+        var r;
+        /*if (typeof record.data == "undefined") {
+
+            r = this.menu.record;
+        } else {
+            r = record.data;
+        }*/
+        r = this.menu.record;
+        console.log(r);
+
         r.clearCache = 1;
         var que = MODx.load({
             xtype: 'modx-window-quick-update-' + this.config.type
@@ -345,7 +368,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             switch (action) {
                 case 'js_deleteFileElement': this.deleteFileAndElement(record); break;
                 case 'js_deleteElement': this.deleteElement(record); break;
-                case 'js_updateElement': this.updateElement(record); break;
+                case 'js_editElement': this.editElement(record); break;
                 default:
                     //window.location = record.data.edit_action;
                     break;

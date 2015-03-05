@@ -279,9 +279,9 @@ class SEManager
     public function getNewFiles () {
 
         $actionCreateElement = json_decode('{"className":"check-square-o js_actionLink js_createElement","text":"Create element"}');
-        $actionDeleteFile    = json_decode('{"className":"times js_actionLink js_deleteFile","text":"Delete file"}');
+        $actionDeleteFile    = json_decode('{"className":"trash js_actionLink js_deleteFile","text":"Delete file"}');
 
-        $actions = array($actionCreateElement, $actionDeleteFile);
+        $actions = array($actionDeleteFile, $actionCreateElement);
 
         $files = array ();
         foreach ($this->scanElementsFolder () as $file) {

@@ -239,10 +239,10 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
     ,getMenu: function() {
         var m = [{
-            text: '<i class="icon icon-times"></i>Delete file and element'
+            text: '<i class="icon icon-trash"></i>Delete file and element'
             ,handler: this.deleteFileAndElement
         },{
-            text: '<i class="icon icon-trash"></i>Delete element'
+            text: '<i class="icon icon-minus-square-o"></i>Delete element'
             ,handler: this.deleteElement
         },{
              text: '<i class="icon icon-edit"></i>' + _('quick_update_' + this.config.type)

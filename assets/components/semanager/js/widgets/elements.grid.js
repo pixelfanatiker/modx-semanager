@@ -247,27 +247,21 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         },{
              text: '<i class="icon icon-edit"></i>' + _('quick_update_' + this.config.type)
             ,handler: this.editElement
+            ,scope: this
         }];
         this.addContextMenuItem(m);
     }
-    ,editElement: function(btn,e, record){
 
-        console.log(record);
+    ,editElement: function(btn, e) {
+        var rec = this.menu.record;
 
-        var r;
-        /*if (typeof record.data == "undefined") {
+        console.log(rec.data);
+        console.log(e.target);
 
-            r = this.menu.record;
-        } else {
-            r = record.data;
-        }*/
-        r = this.menu.record;
-        console.log(r);
-
-        r.clearCache = 1;
+        rec.clearCache = 1;
         var que = MODx.load({
-            xtype: 'modx-window-quick-update-' + this.config.type
-            ,record: r
+             xtype: 'modx-window-quick-update-' + this.config.type
+            ,record: rec
             ,grid: this
             ,listeners: {
                 'success' : {fn:function(){
@@ -276,7 +270,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             }
         });
         que.reset();
-        que.setValues(r);
+        que.setValues(rec);
         que.show(e.target);
     }
 
@@ -306,14 +300,12 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
 
     ,deleteFileAndElement: function(record) {
-        var id, path;
-        if (typeof record.data !== "undefined") {
-            id = record.data.id;
-            path = record.data.path;
-        } else {
-            id = this.menu.record.id;
-            path = this.menu.record.path;
-        }
+        console.log("deleteFileAndElement");
+        var id = this.menu.record.id;
+        var path = this.menu.record.static_file;
+
+        console.log(this.menu.record);
+
         MODx.msg.confirm({
              title: 'Delete file and remove element'
             ,text: 'Are you sure that you want to delete this element from the database and also delete the pysical file?'
@@ -332,19 +324,14 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         return true;
     }
 
-    ,deleteElement: function(record) {
-        var id;
-        if (typeof record.data !== "undefined") {
-            id = record.data.id;
-        } else {
-            id = this.menu.record.id;
-        }
+    ,deleteElement: function() {
+        var id = this.menu.record.id;
         MODx.msg.confirm({
-             title: 'Remove element'
+             title: 'Delete element'
             ,text: 'Are you sure that you really want to delete this element from the database?'
             ,url: this.config.url
             ,params: {
-                 action: 'elements/remove.class'
+                 action: 'elements/delete.class'
                 ,id: id
             }
             ,listeners: {
@@ -363,14 +350,16 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             var action = target.className.split(' ')[3];
             var record = this.getSelectionModel().getSelected();
             this.menu.record = record;
-            console.log("click: " + element + " action: " + action);
+            //console.log("click: " + element + " action: " + action);
+
+            //console.log(this);
 
             switch (action) {
-                case 'js_deleteFileElement': this.deleteFileAndElement(record); break;
-                case 'js_deleteElement': this.deleteElement(record); break;
-                case 'js_editElement': this.editElement(record); break;
+                case 'js_deleteFileElement': this.deleteFileAndElement(); break;
+                case 'js_deleteElement': this.deleteElement(); break;
+                case 'js_editElement': this.editElement(); break;
                 default:
-                    //window.location = record.data.edit_action;
+                    window.location = record.data.edit_action;
                     break;
             }
         }

@@ -7,7 +7,7 @@
   bottom: auto;
 }
 .actions .icon {
-  width: 16px;
+  width: 20px;
   margin-right: 5px;
   text-align: center;
 }
@@ -25,6 +25,7 @@
 }
 .holder .icon[class*="icon-"] {
   font-size: 16px;
+  vertical-align: middle;
 }
 
 .holder .sm-green {

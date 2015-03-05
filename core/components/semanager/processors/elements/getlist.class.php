@@ -85,13 +85,13 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor
                 $contentNew = sha1_file($file);
             }
 
-            $actionDeleteFileElement = json_decode('{"className":"times js_actionLink js_deleteFileElement","text":"Delete file and remove element"}');
-            $actionDeleteElement = json_decode('{"className":"trash js_actionLink js_deleteElement","text":"Remove element"}');
+            $actionDeleteFileElement = json_decode('{"className":"trash js_actionLink js_deleteFileElement","text":"Delete file and element"}');
+            $actionDeleteElement = json_decode('{"className":"minus-square-o js_actionLink js_deleteElement","text":"Delete element"}');
             $actionEditElement = json_decode('{"className":"edit js_actionLink js_editElement","text":"Edit element"}');
             $actionUpdateElement = json_decode('{"className":"refresh js_actionLink js_updateElement","text":"Update element"}');
 
-            $actionDeleteFileElementDisabled = json_decode('{"className":"times disabled","text":"Delete file and remove element"}');
-            $actionDeleteElementDisabled = json_decode('{"className":"trash disabled","text":"Remove element"}');
+            $actionDeleteFileElementDisabled = json_decode('{"className":"trash disabled","text":"Delete file and element"}');
+            $actionDeleteElementDisabled = json_decode('{"className":"minus-square-o disabled","text":"Delete element"}');
             $actionEditElementDisabled = json_decode('{"className":"edit disabled","text":"Edit element"}');
             $actionUpdateElementDisabled = json_decode('{"className":"refresh disabled","text":"Update element"}');
 

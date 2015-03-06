@@ -46,3 +46,8 @@
   vertical-align: text-top;
   font-size: 16px;
 }
+
+#semanager-grid-elements-files .x-btn-text i {
+  margin-right: 10px;
+  font-size: 16px;
+}

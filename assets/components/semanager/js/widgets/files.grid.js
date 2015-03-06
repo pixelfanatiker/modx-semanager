@@ -11,12 +11,10 @@ SEManager.grid.Files = function(config) {
 
         config.tbar = [{
             xtype: 'button'
-            ,text: _('semanager.common.actions.fromfiles')
-            ,icon: MODx.config.template_url + 'images/restyle/icons/elements.png'
-            ,cls:'x-btn-text-icon'
+            ,text: '<i class="icon icon-cubes"></i>' + _('semanager.common.actions.fromfiles')
+            ,cls:'x-btn-text'
             ,style: {
-                paddingLeft: '5px'
-                ,float: 'left'
+                 float: 'left'
                 ,marginRight: '20px'
             }
             ,listeners: {
@@ -27,12 +25,10 @@ SEManager.grid.Files = function(config) {
             ,handler:this.makeElements
         },{
             xtype: 'button'
-            ,text: _('semanager.common.actions.allsync')
-            ,icon: MODx.config.template_url + 'images/restyle/icons/refresh.png'
-            ,cls:'x-btn-text-icon'
+            ,text: '<i class="icon icon-refresh"></i>' + _('semanager.common.actions.allsync')
+            ,cls:'x-btn-text'
             ,style: {
-                paddingLeft: '5px'
-                ,float: 'left'
+                 float: 'left'
                 ,marginRight: '20px'
             }
             ,listeners: {

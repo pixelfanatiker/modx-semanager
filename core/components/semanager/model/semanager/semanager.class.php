@@ -484,9 +484,7 @@ class SEManager {
     }
 
     /**
-     * Get all categories as map for filesystem
-     *
-     * @param $idCategoryory
+     * @param $idCategory
      * @return string
      */
     public function getCategoriesMap ($idCategory) {
@@ -556,7 +554,7 @@ class SEManager {
      * @param $categoryName
      * @return bool
      */
-    public function newOneElem ($path_file, $categoryName) {
+    public function createNewSingleElement ($path_file, $categoryName) {
         if ($this->checkNewFileForElement ($path_file)) {
             $typesClass = array (
                     'templates' => array ('modTemplate', $this->modx->getOption ('semanager.filename_tpl_template', null, 'tp.html')),
@@ -613,7 +611,7 @@ class SEManager {
      * @param array $files
      * @return string
      */
-    public function newElement (array $files = array ()) {
+    public function createNewElements (array $files = array ()) {
         if (!$files) {
             $files = $this->getNewFiles ();
         }

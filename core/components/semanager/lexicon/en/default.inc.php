@@ -35,13 +35,25 @@ $_lang['semanager.common.actions.deletefile'] = "Delete file";
 
 $_lang['semanager.common.actions.files.quickupdate'] = "Quick update file";
 
-$_lang['semanager.common.actions.files.generate'] = "Element generieren";
+$_lang['semanager.common.actions.files.generate'] = "Create element";
 $_lang['semanager.common.actions.files.quickupdate'] = "Quick update file";
-$_lang['semanager.common.actions.files.deletefile'] = "Datei löschen";
+$_lang['semanager.common.actions.files.deletefile'] = "Delete file";
 
 $_lang['semanager.common.actions.deletefile.element'] = "Delete file and element";
 $_lang['semanager.common.actions.delete'] = "Delete";
 $_lang['semanager.common.actions.files.deletefile.confirm.text'] = "Delete file?";
+
+
+// Element tabs chunks, plugins, snippets, templates
+$_lang['semanager.common.actions.element.status.unchanged'] = "No changes";
+$_lang['semanager.common.actions.element.status.changed'] = "File has changed";
+$_lang['semanager.common.actions.element.status.deleted'] = "File has been deleted";
+
+$_lang['semanager.common.actions.element.quickupdate'] = "Quick update element";
+
+$_lang['semanager.common.actions.element.static'] = "As static element";
+$_lang['semanager.common.actions.element.static.confirm.title'] = "Convert to static element";
+$_lang['semanager.common.actions.element.static.confirm.text'] = "The selected element will be saved as static element and a file will be created.";
 
 
 

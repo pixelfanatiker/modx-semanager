@@ -8,15 +8,16 @@ SEManager.grid.Elements = function(config) {
     });
 
     if (!config.tbar) {
-        config.tbar = [{
+        config.tbar = [
+            {
              text: _('quick_create_'+config.type)
             ,handler: {
-                xtype: 'modx-window-quick-create-'+config.type
+                 xtype: 'modx-window-quick-create-'+config.type
                 ,blankValues: true
             }
         },{
-             text: _('semanager.common.actions.export.elements')
-            ,handler: this.exportElements
+             text: _('semanager.common.actions.elements.tostatic.all')
+            ,handler: this.exportElementsAsStatic
 
         }];
     }
@@ -240,42 +241,25 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         Ext.getCmp('semanager-filter-name-'+this.config.type).reset();
         this.getBottomToolbar().changePage(1);
         this.refresh();
-    }
-    ,getMenu: function() {
-        var m = [{
-            text: '<i class="icon icon-trash"></i>' + _('semanager.common.actions.deletefile.element')
-            ,handler: this.deleteFileAndElement
-        },{
-            text: '<i class="icon icon-minus-square-o"></i>' + _('semanager.common.actions.element.deletefile')
-            ,handler: this.deleteElement
-        },{
-             text: '<i class="icon icon-edit"></i>' + _('quick_update_' + this.config.type)
+    }, getMenu: function () {
+        var m = [ {
+            text: '<i class="icon icon-edit"></i>' + _('semanager.common.actions.element.quickupdate')
             ,handler: this.editElement
+        },{
+            text: '<i class="icon icon-save"></i>' + _('semanager.common.actions.element.static')
+            ,handler: this.restoreToFile
+            ,scope: this
+        }, {
+            text: '<i class="icon icon-minus-square-o"></i>' + _('semanager.common.actions.element.delete')
+            ,handler: this.deleteFiles
+            ,scope: this
+        }, {
+            text: '<i class="icon icon-trash"></i>' + _('semanager.common.actions.element.deletefile_element')
+            ,handler: this.deleteFileAndElement
             ,scope: this
         }];
         this.addContextMenuItem(m);
     }
-    ,editElement: function(e) {
-        console.log("editElement");
-        console.log(e);
-        //console.log(e.target);
-        var rec = this.menu.record;
-        rec.clearCache = 1;
-        var que = MODx.load({
-             xtype: 'modx-window-quick-update-' + this.config.type
-            ,record: rec
-            ,grid: this
-            ,listeners: {
-                'success' : {fn:function(){
-                    this.refresh();
-                },scope:this}
-            }
-        });
-        que.reset();
-        que.setValues(rec);
-        que.show(e);
-    }
-
     ,_renderActions: function(v,md,rec) {
         return this.tplActions.apply(rec.data);
     }
@@ -300,22 +284,62 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         '</div>' +
         '</tpl>');
     }
+    ,onClick: function(e) {
+        var target = e.getTarget();
+        var element = target.className.split(' ')[2];
+        if(element === 'js_actionButton' || element === 'js_actionLink') {
+            var action = target.className.split(' ')[3];
+            var record = this.getSelectionModel().getSelected();
+            this.menu.record = record;
+            switch (action) {
+                case 'js_editElement': this.editElement(record, e); break;
+                case 'js_restoreToFile': this.restoreToFile(record, e); break;
+                case 'js_syncToFile': this.syncToFile(record, e); break;
+                case 'js_syncFromFile': this.syncFromFile(record, e); break;
+                case 'js_exportToFile': this.syncToFile(record, e); break;
+                case 'js_deleteElement': this.deleteElement(); break;
+                case 'js_deleteFileElement': this.deleteFileAndElement(); break;
+                case 'js_saveElement': this.syncToFile(); break;
+                default:
+                    window.location = record.data.edit_action;
+                    break;
+            }
+        }
+    }
+    ,editElement: function(rec, e) {
+        var record;
+        if (typeof rec.data === 'object') {
+            record = rec.data;
+        } else {
+            record = this.menu.record;
+        }
+        record.clearCache = 1;
+        var que = MODx.load({
+             xtype: 'modx-window-quick-update-' + this.config.type
+            ,record: record
+            ,grid: this
+            ,listeners: {
+                'success' : {fn:function(){
+                    this.refresh();
+                },scope:this}
+            }
+        });
+        que.reset();
+        que.setValues(record);
+        que.show(e.target);
+    }    
 
     ,deleteFileAndElement: function(record) {
         console.log("deleteFileAndElement");
-        var id = this.menu.record.id;
-        var path = this.menu.record.static_file;
-
-        console.log(this.menu.record);
-
         MODx.msg.confirm({
-             title: _('semanager.common.actions.element.deletefile.confirm.title')
-            ,text: _('semanager.common.actions.element.deletefile.confirm.text')
+             title: _('semanager.common.actions.element.deletefile_element.confirm.title')
+            ,text: _('semanager.common.actions.element.deletefile_element.confirm.text')
             ,url: this.config.url
             ,params: {
                  action: 'elements/delete.class'
-                ,id: id
-                ,path: path
+                ,id: this.menu.record.id
+                ,type: this.menu.record.data.description.toLowerCase()
+                ,file: this.menu.record.data.static_file
             }
             ,listeners: {
                 'success': {fn:function(r) {
@@ -327,14 +351,15 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
 
     ,deleteElement: function() {
-        var id = this.menu.record.id;
         MODx.msg.confirm({
              title: _('semanager.common.actions.element.delete.confirm.title')
             ,text: _('semanager.common.actions.element.delete.confirm.text')
             ,url: this.config.url
             ,params: {
                  action: 'elements/delete.class'
-                ,id: id
+                ,id: this.menu.record.id
+                ,type: this.menu.record.data.description.toLowerCase()
+                ,file: this.menu.record.data.static_file
             }
             ,listeners: {
                 'success': {fn:function(r) {
@@ -345,49 +370,84 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         return true;
     }
 
-    ,onClick: function(e) {
-        var target = e.getTarget();
-        var element = target.className.split(' ')[2];
-        if(element === 'js_actionButton' || element === 'js_actionLink') {
-            var action = target.className.split(' ')[3];
-            var record = this.getSelectionModel().getSelected();
-            this.menu.record = record;
-            //console.log("click: " + element + " action: " + action);
-
-            console.log("onClick");
-            console.log(e);
-            console.log(e.target);
-
-            switch (action) {
-                case 'js_deleteFileElement': this.deleteFileAndElement(); break;
-                case 'js_deleteElement': this.deleteElement(); break;
-                case 'js_editElement': this.editElement(); break;
-                case 'js_saveElement': this.saveElement(); break;
-                default:
-                    window.location = record.data.edit_action;
-                    break;
-            }
-        }
-    }
-
-    ,exportElement: function () {
-        console.log("exportElement")
-    }
-
-
-    ,exportElements: function () {
-        console.log("exportElements");
-        console.log(this.menu.record.id);
-        var id = this.menu.record.id;
+    ,restoreToFile: function () {
+        console.log("restoreToFile");
 
         MODx.msg.confirm({
-            title: _('semanager.common.actions.element.save.confirm.title')
-            ,text: _('semanager.common.actions.element.save.confirm.text')
+            title: _('semanager.common.actions.elements.restore.tofile.confirm.title')
+            ,text: _('semanager.common.actions.elements.restore.tofile.confirm.text')
+            ,url: this.config.url
+            ,params: {
+                action: 'elements/sync.class'
+                ,id: this.menu.record.id
+                ,type: this.menu.record.data.description.toLowerCase()
+                ,file: this.menu.record.data.static_file
+                ,sync: "tofile"
+            }
+            ,listeners: {
+                'success': {fn:function(r) {
+                    this.refresh();
+                } ,scope: this }
+            }
+        });
+        return true;
+    }
+
+    ,syncToFile: function () {
+        console.log("syncToFile");
+
+        MODx.msg.confirm({
+            title: _('semanager.common.actions.elements.sync.tofile.confirm.title')
+            ,text: _('semanager.common.actions.elements.sync.tofile.confirm.text')
+            ,url: this.config.url
+            ,params: {
+                 action: 'elements/sync.class'
+                ,id: this.menu.record.id
+                ,type: this.menu.record.data.description.toLowerCase()
+                ,file: this.menu.record.data.static_file
+                ,sync: "tofile"
+            }
+            ,listeners: {
+                'success': {fn:function(r) {
+                    this.refresh();
+                } ,scope: this }
+            }
+        });
+        return true;
+    }
+
+    ,syncFromFile: function () {
+        console.log("syncFromFile");
+
+        MODx.msg.confirm({
+            title: _('semanager.common.actions.elements.sync.fromfile.confirm.title')
+            ,text: _('semanager.common.actions.elements.sync.fromfile.confirm.text')
+            ,url: this.config.url
+            ,params: {
+                action: 'elements/sync.class'
+                ,id: this.menu.record.id
+                ,type: this.menu.record.data.description.toLowerCase()
+                ,file: this.menu.record.data.static_file
+                ,sync: "fromfile"
+            }
+            ,listeners: {
+                'success': {fn:function(r) {
+                    this.refresh();
+                } ,scope: this }
+            }
+        });
+        return true;
+    }
+
+    ,exportElementsAsStatic: function () {
+        console.log("exportElementsAsStatic");
+
+        MODx.msg.confirm({
+            title: _('semanager.common.actions.elements.tostatic.all.confirm.title')
+            ,text: _('semanager.common.actions.elements.tostatic.all.confirm.text')
             ,url: this.config.url
             ,params: {
                  action: 'elements/save.class'
-                ,id: id
-                ,content: this.menu.record.content
             }
             ,listeners: {
                 'success': {fn:function(r) {
@@ -397,6 +457,8 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         });
         return true;
     }
+
+
 });
 
 Ext.reg('semanager-grid-elements-chunks', SEManager.grid.Elements);

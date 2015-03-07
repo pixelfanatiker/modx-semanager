@@ -317,27 +317,30 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         this.refresh();
     }
     ,getMenu: function(r) {
-        var m = [];
-        m.push({
-            text: '<i class="icon icon-check-square-o"></i>' + _('semanager.common.actions.files.generate')
-            ,handler: this.makeElement
-        });
-        m.push({
-            text: '<i class="icon icon-edit"></i>' + _('semanager.common.actions.files.quickupdate')
-            ,handler: this.updateFile
-        });
-        m.push({
-            text: '<i class="icon icon-trash"></i>' +_('semanager.common.actions.files.deletefile')
-            ,handler: this.deleteFiles
-        });
+        var m = [
+            {
+                 text: '<i class="icon icon-check-square-o"></i>' + _('semanager.common.actions.files.generate')
+                ,handler: this.makeElement
+            },{
+                 text: '<i class="icon icon-edit"></i>' + _('semanager.common.actions.files.quickupdate')
+                ,handler: this.updateFile
+            },{
+                 text: '<i class="icon icon-minus-square-o"></i>' +_('semanager.common.actions.files.delete.element')
+                ,handler: this.deleteFiles
+            },{
+                text: '<i class="icon icon-trash"></i>' +_('semanager.common.actions.files.delete.file')
+                ,handler: this.deleteFiles
+            }
+        ];
+
         this.addContextMenuItem(m);
     }
     ,deleteFiles: function(record) {
-        var path;
+        var file;
         if (typeof record.data !== "undefined") {
-            path = record.data.path;
+            file = record.data.path;
         } else {
-            path = this.menu.record.path;
+            file = this.menu.record.path;
         }
 
         MODx.msg.confirm({
@@ -346,7 +349,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
             ,url: this.config.url
             ,params: {
                  action: 'files/delete.class'
-                ,path: path
+                ,file: file
             }
             ,listeners: {
                 'success': {fn:function(){

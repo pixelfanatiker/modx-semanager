@@ -1,34 +1,35 @@
 <?php
 
 
-$id =   $scriptProperties['id'];
-$type = $scriptProperties['type'];
-$path = $scriptProperties['path'];
+$id =   $scriptProperties["id"];
+$type = $scriptProperties["type"];
+$path = $scriptProperties["path"];
 
-$modElementClass = 'modChunk';
-
-$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[SEM] delete: ' . $id);
-$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[SEM] delete: ' . $path);
-
+if ($type) {
+    if ($type == "chunk") $modClass = "modChunk";
+    if ($type == "plugin") $modClass = "modPlugin";
+    if ($type == "snippet") $modClass = "modSnippet";
+    if ($type == "template") $modClass = "modTemplate";
+} else {
+    return $modx->error->failure("Element type is not defined");
+}
 
 // TODO: create seperate classes
 if ($id && $path) {
-    $element = $modx->getObject($modElementClass, $id);
+    $element = $modx->getObject($modClass, $id);
     if (is_object($element)) {
-        $result = $modx->removeObject($modElementClass, $id);
+        $result = $modx->removeObject($modClass, $id);
         if ($result) {
             unlink($path);
-            return $modx->error->success('', $item);
+            return $modx->error->success("", $item);
         }
     }
 } else if ($id) {
-    $element = $modx->getObject($modElementClass, $id);
+    $element = $modx->getObject($modClass, $id);
     if (is_object($element)) {
-        $result = $modx->removeObject($modElementClass, $id);
+        $result = $modx->removeObject($modClass, $id);
         if($result) {
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[SEM] delete: ' . $result);
-            return $modx->error->success('', $item);
+            return $modx->error->success("", $item);
         }
     }
 }
-

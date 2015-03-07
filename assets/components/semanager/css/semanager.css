@@ -8,7 +8,7 @@
 }
 [id^="semanager-grid-"] .actions .icon {
   width: 20px;
-  margin-right: 5px;
+  margin-right: 0;
   text-align: center;
 }
 [id^="semanager-grid-"] .actions .icon[class*="icon-"] {
@@ -28,20 +28,25 @@
   vertical-align: middle;
 }
 
-[id^="semanager-grid-"] .holder .sm-green {
+[id^="semanager-grid-"] .holder .icon[class*="icon-"].sm-green {
   color: #9ebd2e;
 }
-[id^="semanager-grid-"] .holder .sm-orange {
+[id^="semanager-grid-"] .holder .icon[class*="icon-"].sm-orange {
   color: #EA981C;
 }
-[id^="semanager-grid-"] .holder .sm-red {
+[id^="semanager-grid-"] .holder .icon[class*="icon-"].sm-red {
   color: #c13a1b;
 }
 
-[id^="semanager-grid-"] .sm-menu .x-menu-list li a.x-menu-item {
+[id^="semanager-grid-"] .holder .icon[class*="icon-"]:nth-child(1),
+[id^="semanager-grid-"] .holder .icon[class*="icon-"]:nth-child(4) {
+  margin-right: 10px;
+}
+
+.sm-menu .x-menu-list li a.x-menu-item {
   padding-left: 10px;
 }
-[id^="semanager-grid-"] .sm-menu .x-menu-list li a.x-menu-item i {
+.sm-menu .x-menu-list li a.x-menu-item i {
   width: 20px;
   vertical-align: text-top;
   font-size: 16px;

@@ -279,9 +279,10 @@ class SEManager
     public function getNewFiles () {
 
         $actionCreateElement = json_decode('{"className":"check-square-o js_actionLink js_createElement","text":"Create element"}');
+        $actionEditFile    = json_decode('{"className":"edit js_actionLink js_editFile","text":"Edit file"}');
         $actionDeleteFile    = json_decode('{"className":"trash js_actionLink js_deleteFile","text":"Delete file"}');
 
-        $actions = array($actionDeleteFile, $actionCreateElement);
+        $actions = array($actionCreateElement, $actionEditFile, $actionDeleteFile);
 
         $files = array ();
         foreach ($this->scanElementsFolder () as $file) {
@@ -717,5 +718,39 @@ class SEManager
     public function getStaticFileField ($file, $modClass) {
         $element = $this->modx->getObject ($modClass, array ('static' => 1, 'static_file' => $file));
         return $element;
+    }
+
+
+
+    public function deleteElement($modClass, $id, $path, $item) {
+
+        $element = $this->modx->getObject($modClass, $id);
+
+        if (is_object($element)) {
+            $result = $this->modx->removeObject($modClass, $id);
+            if ($result) {
+                unlink($path);
+                return $this->modx->error->success('', $item);
+            } else {
+                return false;
+            }
+        }
+    }
+
+
+    public function saveElementToFile ($content, $path) {
+
+
+    }
+
+
+    public function deleteFile ($path) {
+        if ($path) {
+            unlink($path);
+            return $this->modx->error->success('', $item);
+        } else {
+            return false;
+        }
+
     }
 }

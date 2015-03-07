@@ -27,17 +27,17 @@ $_lang['semanager.description'] = 'Verwaltung für statische Elemente';
 $_lang['semanager.sync.description'] = "Synchronisiert statische Elemente und überwacht Ordner auf geänderte Dateien";
 
 
-
-
 // Tab Files
 $_lang['semanager.tabs.actions'] = "Neue Dateien";
 $_lang['semanager.common.actions.files.quickupdate'] = "Datei schnell bearbeiten";
 $_lang['semanager.common.actions.files.generate.all'] = "Elemente erstellen";
-$_lang['semanager.common.actions.create.processing'] = "Erstelle Elemente von Dateien ...";
+$_lang['semanager.common.actions.create.processing'] = 'Erstelle Elemente...';
+
+$_lang['semanager.common.actions.allsync'] = "Alles synchronisieren";
+$_lang['semanager.common.actions.synchronizing'] = "Synchronizing...";
 
 $_lang['semanager.common.actions.create.element'] = "Neues Element erstellen";
 $_lang['semanager.common.actions.create.element.confirm'] = "Aus der ausgewählten Datei ein Element erstellen?";
-$_lang['semanager.common.actions.create.processing'] = 'Erstelle Elemente...';
 
 $_lang['semanager.common.actions.files.generate'] = "Element erstellen";
 $_lang['semanager.common.actions.files.quickupdate'] = "Datei bearbeiten";
@@ -91,17 +91,11 @@ $_lang['semanager.common.actions.element.deletefile_element.confirm.text'] = "Da
 $_lang['semanager.common.actions.element.refresh'] = "Geändertes Element aktualisieren";
 
 
-
-
-
-$_lang['semanager.common.actions.allsync'] = "Alles synchronisieren";
-$_lang['semanager.common.actions.synchronizing'] = "Synchronizing...";
-
-
+// Filter
 $_lang['semanager.elements.filter_by_name'] = "Nach Name filtern";
 $_lang['semanager.elements.filter_by_category'] = "Nach Kategorie filtern";
-
 $_lang['semanager.elements.filter_by_type'] = "Nach Typ filtern";
+
 
 $_lang['semanager.elements.static'] = "Statisch";
 $_lang['semanager.elements.file'] = "Dateipfad des Elements";
@@ -109,21 +103,20 @@ $_lang['semanager.elements.make_static_file'] = "Als statisches Element";
 $_lang['semanager.elements.remove_static_file'] = "Von statischen Dateien entfernen";
 $_lang['semanager.elements.exclude_element'] = "Element auslassen";
 
-$_lang['semanager.elements.exclude_element'] = "Element auslassen";
 
-
+// Messages
 $_lang['semanager.no_permission'] = 'Keine Berechtigung';
 
 
 // Systemsettings
-$_lang['semanager.elements_dir'] = 'Elements directory';
-$_lang['semanager.elements_mediasource'] = 'Mediasource folder';
-$_lang['semanager.filename_tpl_chunk'] = 'Suffix for Chunks';
-$_lang['semanager.filename_tpl_plugin'] = 'Suffix for Plugins';
-$_lang['semanager.filename_tpl_snippet'] = 'Suffix for Snippets';
-$_lang['semanager.filename_tpl_template'] = 'Suffix for Templates';
-$_lang['semanager.use_mediasources'] = 'Use mediasource';
-$_lang['semanager.use_suffix_only'] = 'Use simple file suffix only';
-$_lang['semanager.auto_create_elements'] = 'Auto create elements';
+$_lang['semanager.elements_dir'] = 'Elemente Stamm-Verzeichnis ';
+$_lang['semanager.elements_mediasource'] = 'Medienquelle für Elemente';
+$_lang['semanager.filename_tpl_chunk'] = 'Suffix für Chunks';
+$_lang['semanager.filename_tpl_plugin'] = 'Suffix für Plugins';
+$_lang['semanager.filename_tpl_snippet'] = 'Suffix für Snippets';
+$_lang['semanager.filename_tpl_template'] = 'Suffix für Templates';
+$_lang['semanager.use_suffix_only'] = 'Einfachen Suffix verwenden';
+$_lang['semanager.use_mediasources'] = 'Nutze Medienquelle';
+$_lang['semanager.auto_create_elements'] = 'Elemente automatisch erstellen';
 $_lang['semanager.type_separation'] = 'Typ-Seperation nach Ordner';
 $_lang['semanager.use_categories'] = 'Order als Kategorien';

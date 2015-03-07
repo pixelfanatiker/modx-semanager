@@ -173,7 +173,6 @@ SEManager.grid.Elements = function(config) {
 Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
 
     renderDynField: function(v,md,rec,ri,ci,s,g) {
-        console.log("renderDynField");
         var r = s.getAt(ri).data;
         var f,idx;
         var oz = v;
@@ -216,8 +215,6 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
 
     ,onDirty: function(){
-        console.log(this.config.panel);
-
         if (this.config.panel) {
             Ext.getCmp(this.config.panel).fireEvent('fieldChange');
         }
@@ -373,8 +370,6 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
 
     ,restoreToFile: function () {
-        console.log("restoreToFile");
-
         MODx.msg.confirm({
             title: _('semanager.common.actions.elements.restore.tofile.confirm.title')
             ,text: _('semanager.common.actions.elements.restore.tofile.confirm.text')
@@ -396,8 +391,6 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
 
     ,syncToFile: function () {
-        console.log("syncToFile");
-
         MODx.msg.confirm({
             title: _('semanager.common.actions.elements.sync.tofile.confirm.title')
             ,text: _('semanager.common.actions.elements.sync.tofile.confirm.text')
@@ -419,8 +412,6 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
 
     ,syncFromFile: function () {
-        console.log("syncFromFile");
-
         MODx.msg.confirm({
             title: _('semanager.common.actions.elements.sync.fromfile.confirm.title')
             ,text: _('semanager.common.actions.elements.sync.fromfile.confirm.text')
@@ -442,8 +433,6 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
 
     ,exportElementsAsStatic: function () {
-        console.log("exportElementsAsStatic");
-
         MODx.msg.confirm({
             title: _('semanager.common.actions.elements.tostatic.all.confirm.title')
             ,text: _('semanager.common.actions.elements.tostatic.all.confirm.text')
@@ -459,7 +448,6 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         });
         return true;
     }
-
 
 });
 

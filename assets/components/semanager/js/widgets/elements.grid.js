@@ -15,11 +15,11 @@ SEManager.grid.Elements = function(config) {
                  xtype: 'modx-window-quick-create-'+config.type
                 ,blankValues: true
             }
-        },{
+        }/*,{
              text: _('semanager.common.actions.elements.tostatic.all')
             ,handler: this.exportElementsAsStatic
 
-        }];
+        }*/];
     }
     config.tbar.push('->',{
         xtype: 'modx-combo'

@@ -95,8 +95,6 @@ $_lang['semanager.common.actions.element.refresh'] = "Geändertes Element aktual
 
 
 
-
-
 $_lang['semanager.common.actions.allsync'] = "Alles synchronisieren";
 $_lang['semanager.common.actions.synchronizing'] = "Synchronizing...";
 

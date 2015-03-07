@@ -27,18 +27,44 @@ $_lang['semanager.description'] = 'Verwaltung für statische Elemente';
 $_lang['semanager.sync.description'] = "Synchronisiert alle Elemente und überwacht Ordner";
 
 //-- chunks, plugins, shippets, templates - default in core lexicon
-$_lang['semanager.tabs.actions'] = "Änderungen";
-$_lang['semanager.common.actions.quickupdatefile'] = "Datei schnell bearbeiten";
-$_lang['semanager.common.actions.fromfiles'] = "Elemente generieren";
-$_lang['semanager.common.actions.fromfile'] = "Element generieren";
-$_lang['semanager.common.actions.deletefile'] = "Datei löschen";
-$_lang['semanager.common.actions.deletefile.element'] = "Datei und Element löschen";
-$_lang['semanager.common.actions.delete'] = "Löschen";
-$_lang['semanager.common.actions.deletefileq'] = "Datei wirklich löschen?";
+$_lang['semanager.tabs.actions'] = "Neue Dateien";
 
-$_lang['semanager.common.actions.create.element'] = "Element erstellen";
-$_lang['semanager.common.actions.create.element.confirm'] = "Element erstellen?";
+$_lang['semanager.common.actions.files.quickupdate'] = "Datei schnell bearbeiten";
+$_lang['semanager.common.actions.files.generate.all'] = "Elemente erstellen";
+
+$_lang['semanager.common.actions.create.element'] = "Neues Element erstellen";
+$_lang['semanager.common.actions.create.element.confirm'] = "Aus der ausgewählten Datei ein Element erstellen?";
 $_lang['semanager.common.actions.create.processing'] = 'Erstelle Elemente...';
+
+$_lang['semanager.common.actions.files.generate'] = "Element erstellen";
+$_lang['semanager.common.actions.files.quickupdate'] = "Element bearbeiten";
+$_lang['semanager.common.actions.files.deletefile'] = "Datei löschen";
+
+$_lang['semanager.common.actions.files.deletefile.confirm.title'] = " Dateie löschen";
+$_lang['semanager.common.actions.files.deletefile.confirm.text'] = "Die ausgewählte Dateie wird endgültig löschen?";
+
+$_lang['semanager.common.actions.create.processing'] = "Erstelle Elemente von Dateien ...";
+
+
+$_lang['semanager.common.actions.elements.export.all'] = "Alle Elemente exportieren";
+
+$_lang['semanager.common.actions.element.delete'] = "Löschen";
+$_lang['semanager.common.actions.element.deletefile.conform.text'] = "Datei wirklich löschen?";
+
+$_lang['semanager.common.actions.element.deletefile_element'] = "Datei und Element löschen";
+$_lang['semanager.common.actions.element.deletefile_element.confirm.title'] = "Datei und Element löschen";
+$_lang['semanager.common.actions.element.deletefile_element.confirm.text'] = "Datei und Element endgültig löschen?";
+
+
+
+$_lang['semanager.common.actions.element.delete.confirm.title'] = "Element löschen";
+$_lang['semanager.common.actions.element.delete.confirm.text'] = "Das ausgewählte Element wirklich löschen?";
+
+
+$_lang['semanager.common.actions.element.tostatic.confirm.title'] = "Als statisches Element festlegen";
+$_lang['semanager.common.actions.element.tostatic.confirm.text'] = "Das ausgewählte Element als statisches Element festlegen?";
+
+
 
 $_lang['semanager.common.actions.allsync'] = "Alles synchronisieren";
 $_lang['semanager.common.actions.synchronizing'] = "Synchronizing...";

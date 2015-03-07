@@ -28,7 +28,7 @@ $_lang['semanager.sync.description'] = "Сінхранізуе ўсе элеме
 
 //-- chunks, plugins, shippets, templates - default in core lexicon
 $_lang['semanager.tabs.actions'] = "Дзеянні";
-$_lang['semanager.common.actions.fromfiles'] = "Стварыць элементы з файлаў";
+$_lang['semanager.common.actions.files.generate.all'] = "Стварыць элементы з файлаў";
 $_lang['semanager.common.actions.allsync'] = "Сінхранізаваць ўсе";
 
 $_lang['semanager.elements.filter_by_name'] = "Фільтр па імені";

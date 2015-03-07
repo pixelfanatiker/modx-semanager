@@ -28,12 +28,12 @@ $_lang['semanager.sync.description'] = "Синхронизирует все эл
 
 //-- chunks, plugins, shippets, templates - default in core lexicon
 $_lang['semanager.tabs.actions'] = "Действия";
-$_lang['semanager.common.actions.quickupdatefile'] = "Быстро обновить файл";
-$_lang['semanager.common.actions.fromfiles'] = "Создать элементы из файлов";
-$_lang['semanager.common.actions.fromfile'] = "Создать элемент из файла";
+$_lang['semanager.common.actions.files.quickupdate'] = "Быстро обновить файл";
+$_lang['semanager.common.actions.files.generate.all'] = "Создать элементы из файлов";
+$_lang['semanager.common.actions.files.generate'] = "Создать элемент из файла";
 $_lang['semanager.common.actions.deletefile'] = "Удалить файл";
 $_lang['semanager.common.actions.delete'] = "Удаление";
-$_lang['semanager.common.actions.deletefileq'] = "Вы действительно хотите удалить файл?";
+$_lang['semanager.common.actions.files.deletefile.confirm.text'] = "Вы действительно хотите удалить файл?";
 
 $_lang['semanager.common.actions.create.element'] = "Создание элемента из файла";
 $_lang['semanager.common.actions.create.element.confirm'] = "Вы действительно хотите создать элемент из данного файла?";

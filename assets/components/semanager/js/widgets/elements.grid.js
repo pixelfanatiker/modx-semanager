@@ -9,11 +9,15 @@ SEManager.grid.Elements = function(config) {
 
     if (!config.tbar) {
         config.tbar = [{
-            text: _('quick_create_'+config.type)
+             text: _('quick_create_'+config.type)
             ,handler: {
                 xtype: 'modx-window-quick-create-'+config.type
                 ,blankValues: true
             }
+        },{
+             text: _('semanager.common.actions.export.elements')
+            ,handler: this.exportElements
+
         }];
     }
     config.tbar.push('->',{
@@ -80,7 +84,7 @@ SEManager.grid.Elements = function(config) {
         },{
             header: _('actions')
             ,dataIndex: 'actions'
-            ,width: 30
+            ,width: 40
             ,sortable: true
             ,renderer: { fn: this._renderActions ,scope:this }
         },{
@@ -97,7 +101,7 @@ SEManager.grid.Elements = function(config) {
         },{
             header: _('semanager.elements.static')
             ,dataIndex: 'static'
-            ,width: 30
+            ,width: 20
             ,sortable: true
             ,editable: true
             ,renderer: this.renderDynField.createDelegate(this,[this],true)
@@ -242,7 +246,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             text: '<i class="icon icon-trash"></i>' + _('semanager.common.actions.deletefile.element')
             ,handler: this.deleteFileAndElement
         },{
-            text: '<i class="icon icon-minus-square-o"></i>' + _('semanager.common.actions.deletefile')
+            text: '<i class="icon icon-minus-square-o"></i>' + _('semanager.common.actions.element.deletefile')
             ,handler: this.deleteElement
         },{
              text: '<i class="icon icon-edit"></i>' + _('quick_update_' + this.config.type)
@@ -305,8 +309,8 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         console.log(this.menu.record);
 
         MODx.msg.confirm({
-             title: 'Delete file and remove element'
-            ,text: 'Are you sure that you want to delete this element from the database and also delete the pysical file?'
+             title: _('semanager.common.actions.element.deletefile.confirm.title')
+            ,text: _('semanager.common.actions.element.deletefile.confirm.text')
             ,url: this.config.url
             ,params: {
                  action: 'elements/delete.class'
@@ -325,8 +329,8 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     ,deleteElement: function() {
         var id = this.menu.record.id;
         MODx.msg.confirm({
-             title: 'Delete element'
-            ,text: 'Are you sure that you really want to delete this element from the database?'
+             title: _('semanager.common.actions.element.delete.confirm.title')
+            ,text: _('semanager.common.actions.element.delete.confirm.text')
             ,url: this.config.url
             ,params: {
                  action: 'elements/delete.class'
@@ -341,7 +345,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         return true;
     }
 
-    ,onClick: function(e){
+    ,onClick: function(e) {
         var target = e.getTarget();
         var element = target.className.split(' ')[2];
         if(element === 'js_actionButton' || element === 'js_actionLink') {
@@ -358,11 +362,40 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
                 case 'js_deleteFileElement': this.deleteFileAndElement(); break;
                 case 'js_deleteElement': this.deleteElement(); break;
                 case 'js_editElement': this.editElement(); break;
+                case 'js_saveElement': this.saveElement(); break;
                 default:
                     window.location = record.data.edit_action;
                     break;
             }
         }
+    }
+
+    ,exportElement: function () {
+        console.log("exportElement")
+    }
+
+
+    ,exportElements: function () {
+        console.log("exportElements");
+        console.log(this.menu.record.id);
+        var id = this.menu.record.id;
+
+        MODx.msg.confirm({
+            title: _('semanager.common.actions.element.save.confirm.title')
+            ,text: _('semanager.common.actions.element.save.confirm.text')
+            ,url: this.config.url
+            ,params: {
+                 action: 'elements/save.class'
+                ,id: id
+                ,content: this.menu.record.content
+            }
+            ,listeners: {
+                'success': {fn:function(r) {
+                    this.refresh();
+                } ,scope: this }
+            }
+        });
+        return true;
     }
 });
 

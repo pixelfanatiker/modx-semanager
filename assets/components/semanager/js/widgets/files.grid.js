@@ -11,7 +11,7 @@ SEManager.grid.Files = function(config) {
 
         config.tbar = [{
             xtype: 'button'
-            ,text: '<i class="icon icon-cubes"></i>' + _('semanager.common.actions.fromfiles')
+            ,text: '<i class="icon icon-cubes"></i>' + _('semanager.common.actions.files.generate.all')
             ,cls:'primary-button x-btn-noicon'
             ,style: {
                  float: 'left'
@@ -193,6 +193,11 @@ SEManager.grid.Files = function(config) {
         ,fields: ['actions','filename','category','type', 'path','content']
         ,id: 'semanager-grid-elements-files'
         ,url: SEManager.config.connectorUrl
+        ,menuConfig: {
+            defaultAlign: 'tl-b?'
+            ,enableScrolling: false
+            ,cls: 'sm-menu'
+        }
         ,baseParams: {
             action: 'files/getlist'
         }
@@ -314,15 +319,15 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
     ,getMenu: function(r) {
         var m = [];
         m.push({
-            text: _('semanager.common.actions.fromfile')
+            text: '<i class="icon icon-check-square-o"></i>' + _('semanager.common.actions.files.generate')
             ,handler: this.makeElement
         });
         m.push({
-            text: _('semanager.common.actions.quickupdateFile')
+            text: '<i class="icon icon-edit"></i>' + _('semanager.common.actions.files.quickupdate')
             ,handler: this.updateFile
         });
         m.push({
-            text: _('semanager.common.actions.deletefile')
+            text: '<i class="icon icon-trash"></i>' +_('semanager.common.actions.files.deletefile')
             ,handler: this.deleteFiles
         });
         this.addContextMenuItem(m);
@@ -336,8 +341,8 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         }
 
         MODx.msg.confirm({
-            title: _('semanager.common.actions.delete')
-            ,text: _('semanager.common.actions.deletefileq')
+            title: _('semanager.common.actions.files.deletefile.confirm.title')
+            ,text: _('semanager.common.actions.files.deletefile.confirm.text')
             ,url: this.config.url
             ,params: {
                  action: 'files/delete.class'

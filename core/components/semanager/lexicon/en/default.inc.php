@@ -28,13 +28,30 @@ $_lang['semanager.sync.description'] = "Synchronizes all elements and scans dire
 
 //-- chunks, plugins, shippets, templates - default in core lexicon
 $_lang['semanager.tabs.actions'] = "Activity";
-$_lang['semanager.common.actions.quickupdatefile'] = "Quick update file";
-$_lang['semanager.common.actions.fromfiles'] = "Create elements from files";
-$_lang['semanager.common.actions.fromfile'] = "Create element from file";
+
+$_lang['semanager.common.actions.files.generate.all'] = "Create elements from files";
+$_lang['semanager.common.actions.files.generate'] = "Create element from file";
 $_lang['semanager.common.actions.deletefile'] = "Delete file";
+
+$_lang['semanager.common.actions.files.quickupdate'] = "Quick update file";
+
+$_lang['semanager.common.actions.files.generate'] = "Element generieren";
+$_lang['semanager.common.actions.files.quickupdate'] = "Quick update file";
+$_lang['semanager.common.actions.files.deletefile'] = "Datei löschen";
+
 $_lang['semanager.common.actions.deletefile.element'] = "Delete file and element";
 $_lang['semanager.common.actions.delete'] = "Delete";
-$_lang['semanager.common.actions.deletefileq'] = "Delete file?";
+$_lang['semanager.common.actions.files.deletefile.confirm.text'] = "Delete file?";
+
+
+
+$_lang['semanager.common.actions.create.processing'] = "Generate elements from files ...";
+
+$_lang['semanager.common.actions.element.deletefile.confirm.title'] = "Delete file and element?";
+$_lang['semanager.common.actions.element.deletefile.confirm.text'] = "Are you sure that you want to delete this element from the database and also delete the pysical file?";
+$_lang['semanager.common.actions.element.delete.confirm.title'] = "Delete element";
+$_lang['semanager.common.actions.element.delete.confirm.text'] = "Are you sure that you really want to delete this element from the database?";
+
 
 $_lang['semanager.common.actions.create.element'] = "Create element";
 $_lang['semanager.common.actions.create.element.confirm'] = "Create element?";

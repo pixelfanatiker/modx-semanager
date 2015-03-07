@@ -114,3 +114,17 @@ $_lang['semanager.elements.exclude_element'] = "Element auslassen";
 
 
 $_lang['semanager.no_permission'] = 'Keine Berechtigung';
+
+
+// Systemsettings
+$_lang['semanager.elements_dir'] = 'Elements directory';
+$_lang['semanager.elements_mediasource'] = 'Mediasource folder';
+$_lang['semanager.filename_tpl_chunk'] = 'Suffix for Chunks';
+$_lang['semanager.filename_tpl_plugin'] = 'Suffix for Plugins';
+$_lang['semanager.filename_tpl_snippet'] = 'Suffix for Snippets';
+$_lang['semanager.filename_tpl_template'] = 'Suffix for Templates';
+$_lang['semanager.use_mediasources'] = 'Use mediasource';
+$_lang['semanager.use_suffix_only'] = 'Use simple file suffix only';
+$_lang['semanager.auto_create_elements'] = 'Auto create elements';
+$_lang['semanager.type_separation'] = 'Typ-Seperation nach Ordner';
+$_lang['semanager.use_categories'] = 'Nutze Order als Kategorien';

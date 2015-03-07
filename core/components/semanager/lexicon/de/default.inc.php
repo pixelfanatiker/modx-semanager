@@ -32,6 +32,7 @@ $_lang['semanager.common.actions.quickupdatefile'] = "Datei schnell bearbeiten";
 $_lang['semanager.common.actions.fromfiles'] = "Elemente generieren";
 $_lang['semanager.common.actions.fromfile'] = "Element generieren";
 $_lang['semanager.common.actions.deletefile'] = "Datei löschen";
+$_lang['semanager.common.actions.deletefile.element'] = "Datei und Element löschen";
 $_lang['semanager.common.actions.delete'] = "Löschen";
 $_lang['semanager.common.actions.deletefileq'] = "Datei wirklich löschen?";
 
@@ -53,5 +54,8 @@ $_lang['semanager.elements.file'] = "Dateipfad des Elements";
 $_lang['semanager.elements.make_static_file'] = "Als statisches Element";
 $_lang['semanager.elements.remove_static_file'] = "Von statischen Dateien entfernen";
 $_lang['semanager.elements.exclude_element'] = "Element auslassen";
+
+$_lang['semanager.elements.exclude_element'] = "Element auslassen";
+
 
 $_lang['semanager.no_permission'] = 'Keine Berechtigung';

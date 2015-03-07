@@ -239,10 +239,10 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
     }
     ,getMenu: function() {
         var m = [{
-            text: '<i class="icon icon-trash"></i>Delete file and element'
+            text: '<i class="icon icon-trash"></i>' + _('semanager.common.actions.deletefile.element')
             ,handler: this.deleteFileAndElement
         },{
-            text: '<i class="icon icon-minus-square-o"></i>Delete element'
+            text: '<i class="icon icon-minus-square-o"></i>' + _('semanager.common.actions.deletefile')
             ,handler: this.deleteElement
         },{
              text: '<i class="icon icon-edit"></i>' + _('quick_update_' + this.config.type)
@@ -251,13 +251,11 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         }];
         this.addContextMenuItem(m);
     }
-
-    ,editElement: function(btn, e) {
+    ,editElement: function(e) {
+        console.log("editElement");
+        console.log(e);
+        //console.log(e.target);
         var rec = this.menu.record;
-
-        console.log(rec.data);
-        console.log(e.target);
-
         rec.clearCache = 1;
         var que = MODx.load({
              xtype: 'modx-window-quick-update-' + this.config.type
@@ -271,7 +269,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         });
         que.reset();
         que.setValues(rec);
-        que.show(e.target);
+        que.show(e);
     }
 
     ,_renderActions: function(v,md,rec) {
@@ -352,7 +350,9 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             this.menu.record = record;
             //console.log("click: " + element + " action: " + action);
 
-            //console.log(this);
+            console.log("onClick");
+            console.log(e);
+            console.log(e.target);
 
             switch (action) {
                 case 'js_deleteFileElement': this.deleteFileAndElement(); break;

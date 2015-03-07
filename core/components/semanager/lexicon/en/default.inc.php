@@ -32,6 +32,7 @@ $_lang['semanager.common.actions.quickupdatefile'] = "Quick update file";
 $_lang['semanager.common.actions.fromfiles'] = "Create elements from files";
 $_lang['semanager.common.actions.fromfile'] = "Create element from file";
 $_lang['semanager.common.actions.deletefile'] = "Delete file";
+$_lang['semanager.common.actions.deletefile.element'] = "Delete file and element";
 $_lang['semanager.common.actions.delete'] = "Delete";
 $_lang['semanager.common.actions.deletefileq'] = "Delete file?";
 

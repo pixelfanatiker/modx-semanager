@@ -38,11 +38,6 @@
   color: #c13a1b;
 }
 
-[id^="semanager-grid-"] .holder .icon[class*="icon-"]:nth-child(1),
-[id^="semanager-grid-"] .holder .icon[class*="icon-"]:nth-child(4) {
-  margin-right: 10px;
-}
-
 .sm-menu .x-menu-list li a.x-menu-item {
   padding-left: 10px;
 }
@@ -55,4 +50,11 @@
 [id^="semanager-grid-"] .x-btn-text i {
   margin-right: 10px;
   font-size: 16px;
+}
+
+
+#semanager-tab-actions .holder .icon[class*="icon-"]:nth-child(2),
+[id^="semanager-grid-"]:not("#semanager-tab-actions") .holder .icon[class*="icon-"]:nth-child(1),
+[id^="semanager-grid-"]:not("#semanager-tab-actions") .holder .icon[class*="icon-"]:nth-child(4) {
+  margin-right: 10px;
 }

@@ -1,3 +1,11 @@
+
+0.2.3 (March 07, 2015)
+================================
+- Refactoring of semanagerclass
+- Extend the manager functionality with each syncing of file.
+- Use awesome iconfont
+- Use mediasources for element root
+
 0.2.1 (March 29, 2014)
 ================================
 - [#11] Added compatibility with AjaxManager plugin

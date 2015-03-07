@@ -323,10 +323,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
                 ,handler: this.makeElement
             },{
                  text: '<i class="icon icon-edit"></i>' + _('semanager.common.actions.files.quickupdate')
-                ,handler: this.updateFile
-            },{
-                 text: '<i class="icon icon-minus-square-o"></i>' +_('semanager.common.actions.files.delete.element')
-                ,handler: this.deleteFiles
+                ,handler: this.editFile
             },{
                 text: '<i class="icon icon-trash"></i>' +_('semanager.common.actions.files.delete.file')
                 ,handler: this.deleteFiles
@@ -335,6 +332,26 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
 
         this.addContextMenuItem(m);
     }
+
+    ,onClick: function(e){
+        var target = e.getTarget();
+        var element = target.className.split(' ')[2];
+        if(element === 'js_actionButton' || element === 'js_actionLink') {
+            var action = target.className.split(' ')[3];
+            var record = this.getSelectionModel().getSelected();
+            this.menu.record = record;
+
+            switch (action) {
+                case 'js_createElement': this.makeElement(record); break;
+                case 'js_deleteFile': this.deleteFiles(record); break;
+                case 'js_updateElement': this.updateFile(record); break;
+                default:
+                    //window.location = record.data.edit_action;
+                    break;
+            }
+        }
+    }
+
     ,deleteFiles: function(record) {
         var file;
         if (typeof record.data !== "undefined") {
@@ -358,6 +375,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
             }
         });
     }
+
     ,updateFile: function(btn,e){
         var r = this.menu.record;
         r.name = r.filename;
@@ -380,6 +398,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         que.setValues(r);
         que.show(e.target);
     }
+
     ,makeElement: function(record){
         var path, category;
         if (typeof record.data !== "undefined") {
@@ -406,6 +425,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
             }
         });
     }
+
     ,makeElements: function(btn,e) {
          Ext.Msg.show({
              title: _('please_wait')
@@ -460,27 +480,6 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         '</tpl>' +
         '</div>' +
         '</tpl>');
-    }
-
-    ,onClick: function(e){
-        var target = e.getTarget();
-        var element = target.className.split(' ')[2];
-        if(element === 'js_actionButton' || element === 'js_actionLink') {
-            var action = target.className.split(' ')[3];
-            var record = this.getSelectionModel().getSelected();
-            this.menu.record = record;
-            //console.log("click: " + element + " action: " + action + " record: " + record.id);
-            //console.log(this.menu.record);
-
-            switch (action) {
-                case 'js_createElement': this.makeElement(record); break;
-                case 'js_deleteFile': this.deleteFiles(record); break;
-                case 'js_updateElement': this.updateFile(record); break;
-                default:
-                    //window.location = record.data.edit_action;
-                    break;
-            }
-        }
     }
 });
 

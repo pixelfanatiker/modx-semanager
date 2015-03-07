@@ -1,35 +1,43 @@
 <?php
 
 
-$id =   $scriptProperties["id"];
-$type = $scriptProperties["type"];
-$path = $scriptProperties["path"];
-
-if ($type) {
-    if ($type == "chunk") $modClass = "modChunk";
-    if ($type == "plugin") $modClass = "modPlugin";
-    if ($type == "snippet") $modClass = "modSnippet";
-    if ($type == "template") $modClass = "modTemplate";
-} else {
-    return $modx->error->failure("Element type is not defined");
+if (!isset($modx->semanager) || !is_object($modx->semanager)) {
+    $semanager = $modx->getService('semanager','SEManager',$modx->getOption('semanager.core_path',null,$modx->getOption('core_path').'components/semanager/').'model/semanager/', $scriptProperties);
+    if (!($semanager instanceof SEManager)) return '---';
 }
 
-// TODO: create seperate classes
-if ($id && $path) {
-    $element = $modx->getObject($modClass, $id);
-    if (is_object($element)) {
-        $result = $modx->removeObject($modClass, $id);
-        if ($result) {
-            unlink($path);
-            return $modx->error->success("", $item);
-        }
+$id =   $scriptProperties["id"];
+$type = $scriptProperties["type"];
+$file = $scriptProperties["file"];
+$del =  $scriptProperties["del"];
+
+$result = true;
+
+if ($type) {
+    $modClass = $modx->semanager->getModClass($type);
+} else {
+    $result = false;
+}
+
+
+if ($del == "element") {
+    $result = $modx->semanager->deleteElement($modClass, $id);
+
+} else if ($del == "file") {
+    $result = $modx->semanager->deleteFile($file);
+
+} else if ($del == "both") {
+    $result = $modx->semanager->deleteElement($modClass, $id);
+
+    if ($result == true) {
+        $result = $modx->semanager->deleteFile($file);
     }
-} else if ($id) {
-    $element = $modx->getObject($modClass, $id);
-    if (is_object($element)) {
-        $result = $modx->removeObject($modClass, $id);
-        if($result) {
-            return $modx->error->success("", $item);
-        }
-    }
+}
+
+//$modx->log(xPDO::LOG_LEVEL_ERROR,'[SEM] delete step3: ' . $del . "    result: " . $result);
+
+if ($result == true) {
+    return $modx->error->success("");
+} else {
+    return $modx->error->failure("");
 }

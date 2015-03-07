@@ -1,81 +1,39 @@
 <?php
 
 
+if (!isset($modx->semanager) || !is_object($modx->semanager)) {
+    $semanager = $modx->getService('semanager','SEManager',$modx->getOption('semanager.core_path',null,$modx->getOption('core_path').'components/semanager/').'model/semanager/', $scriptProperties);
+    if (!($semanager instanceof SEManager)) return '---';
+}
+
+
 $id =   $scriptProperties["id"];
 $type = $scriptProperties["type"];
 $file = $scriptProperties["file"];
 $sync = $scriptProperties["sync"];
 
-$parameter = array(
-    "id" => $id,
-    "static" => 1,
-    "static_file" => $file
-);
-
-/*$this->modx->log(xPDO::LOG_LEVEL_ERROR,"[SEM] sync: " . $sync . "  id  : " . $id);
-$this->modx->log(xPDO::LOG_LEVEL_ERROR,"[SEM] sync: " . $sync . "  type: " . $type);
-$this->modx->log(xPDO::LOG_LEVEL_ERROR,"[SEM] sync: " . $sync . "  file: " . $file);*/
+$result = true;
 
 if ($type) {
+    $modClass = $modx->semanager->getModClass($type);
+    $fieldName = $modx->semanager->getElementFieldName($type);
 
-    if ($type == "template") {
-        $modClass = "modTemplate";
-        $fieldName = "templatename";
-        
-    } else {        
-        $fieldName = "name";
-        if ($type == "chunk") {
-            $modClass = "modChunk";
-        }
-        if ($type == "plugin") {
-            $modClass = "modPlugin";
-        }
-        if ($type == "snippet") {
-            $modClass = "modSnippet";
-        }
-    }
-
-} else {
-    return $modx->error->failure("Element type is not defined");
-}
-
-if ($id && $file) {
+    $parameter = array("id" => $id , "static_file" => $file);
 
     if ($sync == "tofile") {
-
-        $element = $this->modx->getObject($modClass, $parameter);
-
-        if (is_object($element)) {
-
-            $content = $element->get("content");
-            $openFile = fopen($file, "w");
-
-            fwrite($openFile, $content);
-            fclose($openFile);
-
-            return $modx->error->success("", $item);
-        } else {
-            return $modx->error->failure("", $item);
-        }
-
+        $result = $modx->semanager->writeToFile($file, $modClass, $parameter);
 
     } else if ($sync == "fromfile") {
-
-        $fileContent = file_get_contents($file);
-
-        $element = $this->modx->getObject($modClass, $parameter);
-
-        if (is_object($element)) {
-
-            $element->set("content", $fileContent);
-            $element->save();
-
-            if($element->save() == true) {
-                return $modx->error->success("", $item);
-            }
-        } else {
-            return $modx->error->failure("", $item);
-        }
+        $result = $modx->semanager->updateChunkFromStaticFile($file, $modClass, $parameter);
     }
 }
 
+
+$result = true;
+
+
+if ($result) {
+    return $modx->error->success("");
+} else {
+    return $modx->error->failure("");
+}

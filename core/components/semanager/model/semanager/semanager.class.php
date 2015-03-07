@@ -24,8 +24,7 @@
  * @package semanager
  */
 
-class SEManager
-{
+class SEManager {
 
     public $modx = null;
     public $map = array ();
@@ -724,36 +723,119 @@ class SEManager
     }
 
 
-
-    public function deleteElement($modClass, $id, $path, $item) {
+    /**
+     * @param $modClass
+     * @param $id
+     * @param $file
+     * @return bool
+     */
+    public function deleteElement($modClass, $id) {
 
         $element = $this->modx->getObject($modClass, $id);
 
         if (is_object($element)) {
-            $result = $this->modx->removeObject($modClass, $id);
-            if ($result) {
-                unlink($path);
-                return $this->modx->error->success('', $item);
-            } else {
-                return false;
-            }
+            return $this->modx->removeObject($modClass, $id);
+        } else {
+            return false;
         }
     }
 
 
-    public function saveElementToFile ($content, $path) {
-
-
-    }
-
-
-    public function deleteFile ($path) {
-        if ($path) {
-            unlink($path);
-            return $this->modx->error->success('', $item);
+    /**
+     * @param $file
+     * @return bool
+     */
+    public function deleteFile ($file) {
+        if ($file) {
+            unlink($file);
+            return true;
         } else {
             return false;
         }
 
+    }
+
+
+    /**
+     * @param $type
+     * @return string
+     */
+    public function getModClass($type) {
+        if ($type == "chunk") $modClass = "modChunk";
+        else if ($type == "plugin") $modClass = "modPlugin";
+        else if ($type == "snippet") $modClass = "modSnippet";
+        else if ($type == "template") $modClass = "modTemplate";
+
+        return $modClass;
+    }
+
+
+
+    /**
+     * @param $type
+     * @return string
+     */
+    public function getElementFieldName($type) {
+        $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[SEM] getElementFieldName: ' . $type);
+        if ($type == "template") {
+            $elementFieldName = "templatename";
+        } else {
+            $elementFieldName = "name";
+        }
+
+        return $elementFieldName;
+    }
+
+
+    /**
+     * @param $file
+     * @param $modClass
+     * @param $parameter
+     * @return bool
+     */
+    public function writeToFile($file, $modClass, $parameter) {
+
+        $element = $this->modx->getObject($modClass, $parameter);
+        if (is_object($element)) {
+
+            $content = $element->get("content");
+            $openFile = fopen($file, "w");
+
+            fwrite($openFile, $content);
+            fclose($openFile);
+
+            $status = true;
+        } else {
+            $status = false;
+        }
+        return $status;
+    }
+
+
+    /**
+     * @param $file
+     * @param $modClass
+     * @param $parameter
+     * @return bool
+     */
+    public function updateChunkFromStaticFile($file, $modClass, $parameter) {
+
+        $fileContent = file_get_contents($file);
+        $element = $this->modx->getObject($modClass, $parameter);
+
+        if (is_object($element)) {
+            $element->set("content", $fileContent);
+            $element->save();
+
+            if ($element->save() == true) {
+                $status = true;
+            } else {
+                $status = false;
+            }
+        } else {
+            $status = false;
+        }
+
+        return $status;
     }
 }

@@ -24,15 +24,16 @@
 
 $_lang['semanager.title'] = 'SE Manager';
 $_lang['semanager.description'] = 'Verwaltung für statische Elemente';
-$_lang['semanager.sync.description'] = "Synchronisiert alle Elemente und überwacht Ordner";
+$_lang['semanager.sync.description'] = "Synchronisiert statische Elemente und überwacht Ordner auf geänderte Dateien";
 
 
-$_lang['semanager.tabs.actions'] = "Neue Dateien";
 
 
 // Tab Files
+$_lang['semanager.tabs.actions'] = "Neue Dateien";
 $_lang['semanager.common.actions.files.quickupdate'] = "Datei schnell bearbeiten";
 $_lang['semanager.common.actions.files.generate.all'] = "Elemente erstellen";
+$_lang['semanager.common.actions.create.processing'] = "Erstelle Elemente von Dateien ...";
 
 $_lang['semanager.common.actions.create.element'] = "Neues Element erstellen";
 $_lang['semanager.common.actions.create.element.confirm'] = "Aus der ausgewählten Datei ein Element erstellen?";
@@ -45,8 +46,6 @@ $_lang['semanager.common.actions.files.delete.file'] = "Datei löschen";
 
 $_lang['semanager.common.actions.files.deletefile.confirm.title'] = " Datei löschen";
 $_lang['semanager.common.actions.files.deletefile.confirm.text'] = "Die ausgewählte Dateie wird endgültig löschen?";
-
-$_lang['semanager.common.actions.create.processing'] = "Erstelle Elemente von Dateien ...";
 
 
 
@@ -127,4 +126,4 @@ $_lang['semanager.use_mediasources'] = 'Use mediasource';
 $_lang['semanager.use_suffix_only'] = 'Use simple file suffix only';
 $_lang['semanager.auto_create_elements'] = 'Auto create elements';
 $_lang['semanager.type_separation'] = 'Typ-Seperation nach Ordner';
-$_lang['semanager.use_categories'] = 'Nutze Order als Kategorien';
+$_lang['semanager.use_categories'] = 'Order als Kategorien';

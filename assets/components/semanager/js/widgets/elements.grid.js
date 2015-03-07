@@ -306,6 +306,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             }
         }
     }
+
     ,editElement: function(rec, e) {
         var record;
         if (typeof rec.data === 'object') {
@@ -329,8 +330,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         que.show(e.target);
     }    
 
-    ,deleteFileAndElement: function(record) {
-        console.log("deleteFileAndElement");
+    ,deleteElement: function() {
         MODx.msg.confirm({
              title: _('semanager.common.actions.element.deletefile_element.confirm.title')
             ,text: _('semanager.common.actions.element.deletefile_element.confirm.text')
@@ -340,6 +340,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
                 ,id: this.menu.record.id
                 ,type: this.menu.record.data.description.toLowerCase()
                 ,file: this.menu.record.data.static_file
+                ,del: "element"
             }
             ,listeners: {
                 'success': {fn:function(r) {
@@ -350,7 +351,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
         return true;
     }
 
-    ,deleteElement: function() {
+    ,deleteFileAndElement: function() {
         MODx.msg.confirm({
              title: _('semanager.common.actions.element.delete.confirm.title')
             ,text: _('semanager.common.actions.element.delete.confirm.text')
@@ -360,6 +361,7 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
                 ,id: this.menu.record.id
                 ,type: this.menu.record.data.description.toLowerCase()
                 ,file: this.menu.record.data.static_file
+                ,del: "both"
             }
             ,listeners: {
                 'success': {fn:function(r) {

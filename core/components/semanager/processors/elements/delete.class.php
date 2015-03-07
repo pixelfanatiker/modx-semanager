@@ -1,6 +1,7 @@
 <?php
 
 $id =   $scriptProperties['id'];
+$type = $scriptProperties['type'];
 $path = $scriptProperties['path'];
 
 $this->modx->log(xPDO::LOG_LEVEL_ERROR,'[SEM] delete: ' . $id);

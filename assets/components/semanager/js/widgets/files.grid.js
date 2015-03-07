@@ -12,7 +12,7 @@ SEManager.grid.Files = function(config) {
         config.tbar = [{
             xtype: 'button'
             ,text: '<i class="icon icon-cubes"></i>' + _('semanager.common.actions.fromfiles')
-            ,cls:'x-btn-text'
+            ,cls:'primary-button x-btn-noicon'
             ,style: {
                  float: 'left'
                 ,marginRight: '20px'

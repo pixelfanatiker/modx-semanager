@@ -1,53 +1,53 @@
-.holder {
+[id^="semanager-grid-"] .holder {
   margin: 0;
   overflow: visible;
 }
-.actions {
+[id^="semanager-grid-"] .actions {
   position: relative;
   bottom: auto;
 }
-.actions .icon {
+[id^="semanager-grid-"] .actions .icon {
   width: 20px;
   margin-right: 5px;
   text-align: center;
 }
-.actions .icon[class*="icon-"] {
+[id^="semanager-grid-"] .actions .icon[class*="icon-"] {
   cursor: pointer;
   color: #757575;
   transition: color .25s ease-in-out;
 }
-.actions .icon[class*="js_actionLink"]:hover {
+[id^="semanager-grid-"] .actions .icon[class*="js_actionLink"]:hover {
   color: #333;
 }
-.actions .icon[class$="disabled"] {
+[id^="semanager-grid-"] .actions .icon[class$="disabled"] {
   color: #d6d6d6;
   cursor: default;
 }
-.holder .icon[class*="icon-"] {
+[id^="semanager-grid-"] .holder .icon[class*="icon-"] {
   font-size: 16px;
   vertical-align: middle;
 }
 
-.holder .sm-green {
+[id^="semanager-grid-"] .holder .sm-green {
   color: #9ebd2e;
 }
-.holder .sm-orange {
+[id^="semanager-grid-"] .holder .sm-orange {
   color: #EA981C;
 }
-.holder .sm-red {
+[id^="semanager-grid-"] .holder .sm-red {
   color: #c13a1b;
 }
 
-.sm-menu .x-menu-list li a.x-menu-item {
+[id^="semanager-grid-"] .sm-menu .x-menu-list li a.x-menu-item {
   padding-left: 10px;
 }
-.sm-menu .x-menu-list li a.x-menu-item i {
+[id^="semanager-grid-"] .sm-menu .x-menu-list li a.x-menu-item i {
   width: 20px;
   vertical-align: text-top;
   font-size: 16px;
 }
 
-#semanager-grid-elements-files .x-btn-text i {
+[id^="semanager-grid-"] .x-btn-text i {
   margin-right: 10px;
   font-size: 16px;
 }

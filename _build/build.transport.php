@@ -1,7 +1,7 @@
 <?php
 //setlocale(LC_ALL, 'ru_RU.CP1251', 'rus_RUS.CP1251', 'Russian_Russia.1251', 'ru_RU.UTF-8');
 /**
- * StaticElements Manager build script
+ * SE Manager build script
  *
  * @package semanager
  * @subpackage buld
@@ -12,7 +12,7 @@ $mtime = $mtime[1] + $mtime[0];
 $tstart = $mtime;
 set_time_limit(0);
 /* define package */
-define('PKG_NAME','StaticElements Manager');
+define('PKG_NAME','SE Manager');
 define('PKG_NAME_LOWER', 'semanager');
 define('PKG_VERSION','0.2.3');
 define('PKG_RELEASE','alpha');

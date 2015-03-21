@@ -22,7 +22,7 @@ SEManager.grid.Files = function(config) {
 
                 }
             }
-            ,handler:this.makeElements
+            ,handler:this.createElements
         },{
             xtype: 'button'
             ,text: '<i class="icon icon-refresh"></i>' + _('semanager.common.actions.allsync')
@@ -320,12 +320,12 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         var m = [
             {
                  text: '<i class="icon icon-check-square-o"></i>' + _('semanager.common.actions.files.generate')
-                ,handler: this.makeElement
+                ,handler: this.createElement
             },{
                  text: '<i class="icon icon-edit"></i>' + _('semanager.common.actions.files.quickupdate')
                 ,handler: this.editFile
             },{
-                text: '<i class="icon icon-trash"></i>' +_('semanager.common.actions.files.delete.file')
+                 text: '<i class="icon icon-trash"></i>' +_('semanager.common.actions.files.delete.file')
                 ,handler: this.deleteFiles
             }
         ];
@@ -342,7 +342,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
             this.menu.record = record;
 
             switch (action) {
-                case 'js_createElement': this.makeElement(record); break;
+                case 'js_createElement': this.createElement(record); break;
                 case 'js_deleteFile': this.deleteFiles(record); break;
                 case 'js_updateElement': this.updateFile(record); break;
                 default:
@@ -399,7 +399,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         que.show(e.target);
     }
 
-    ,makeElement: function(record){
+    ,createElement: function(record){
         var path, category;
         if (typeof record.data !== "undefined") {
             path = record.data.path;
@@ -414,7 +414,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
             ,text: _('semanager.common.actions.create.element.confirm')
             ,url: this.config.url
             ,params: {
-                action: 'files/makeelement.class'
+                 action: 'files/createelement.class'
                 ,path: path
                 ,category: category
             }
@@ -426,7 +426,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         });
     }
 
-    ,makeElements: function(btn,e) {
+    ,createElements: function(btn,e) {
          Ext.Msg.show({
              title: _('please_wait')
              ,msg: ('semanager.common.actions.create.processing')
@@ -437,14 +437,13 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
 
          MODx.util.Progress.reset();
          for(var i = 1; i < 20; i++) {
-
             setTimeout('MODx.util.Progress.time('+i+','+MODx.util.Progress.id+')',i*1000);
          }
 
          MODx.Ajax.request({
              url: SEManager.config.connectorUrl
              ,params: {
-                action: 'files/newelem.class'
+                action: 'files/createelements.class'
              }
              ,listeners: {
              'success': {fn:function(r) {

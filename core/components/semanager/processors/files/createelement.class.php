@@ -6,11 +6,16 @@ if (!isset($modx->semanager) || !is_object($modx->semanager)) {
     if (!($semanager instanceof SEManager)) return '---';
 }
 
-
 if (!$modx->hasPermission('view')) {
     return $this->failure($modx->lexicon('semanager.no_permission'));
 }
 
-$newElem = $modx->semanager->createNewSingleElement($scriptProperties['path'], $scriptProperties['category']);
+
+$path = $scriptProperties["path"];
+$category = $scriptProperties["category"];
+
+$modx->log(xPDO::LOG_LEVEL_DEBUG, "path:".$path);
+
+//$newElem = $modx->semanager->createNewSingleElement($path, $category);
 
 return $modx->error->success($newElem);

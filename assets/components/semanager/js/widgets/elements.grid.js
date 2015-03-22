@@ -15,11 +15,11 @@ SEManager.grid.Elements = function(config) {
                  xtype: 'modx-window-quick-create-'+config.type
                 ,blankValues: true
             }
-        }/*,{
+        },{
              text: _('semanager.common.actions.elements.tostatic.all')
             ,handler: this.exportElementsAsStatic
 
-        }*/];
+        }];
     }
     config.tbar.push('->',{
         xtype: 'modx-combo'
@@ -161,7 +161,6 @@ SEManager.grid.Elements = function(config) {
         ,plugins: this.exp
         ,autoHeight: true
         ,paging: true
-        //,remoteSort: true
         ,remoteSort: false
         ,listeners: {
             'afterAutoSave': {fn:function() {
@@ -453,25 +452,6 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             }
         });
         return true;
-    }
-
-    ,getMediaSource: function (event) {
-        var sourceName = "None";
-        MODx.Ajax.request({
-             url: this.config.url
-            ,params: {
-                 action: 'common/getmediasource'
-                ,id: event
-            }
-            ,listeners: {
-                'success': {fn:function(response) {
-                    sourceName = response.message;
-                    console.log("sourceName: "+sourceName);
-
-                } ,scope:this }
-            }
-        });
-        return sourceName;
     }
 
 });

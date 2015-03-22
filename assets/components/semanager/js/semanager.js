@@ -15,4 +15,4 @@ Ext.extend(SEManager,Ext.Component,{
 });
 Ext.reg('SEManager',SEManager);
 
-var SEManager = new SEManager();
+SEManager = new SEManager();

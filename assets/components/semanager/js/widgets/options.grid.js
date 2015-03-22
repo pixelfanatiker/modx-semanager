@@ -1,30 +1,38 @@
 SEManager.grid.Options = function(config) {
     config = config || {};
+
+    this.exp = new Ext.grid.RowExpander({
+        tpl : new Ext.Template(
+            '<p class="desc">{description}</p>'
+        )
+    });
+
+
     Ext.applyIf(config,{
-        id: 'semanager-tab-options'
+         id: 'semanager-grid-options'
         ,url: SEManager.config.connectorUrl
-        ,baseParams: { action: '/options/getOptions' }
-        ,fields: ['key','value']
+        ,baseParams: {
+             action: 'options/getoptions'
+            ,type: config.type
+        }
+        ,menuConfig: {
+             defaultAlign: 'tl-b?'
+            ,enableScrolling: false
+            ,cls: 'sm-menu'
+        }
+        ,save_action: 'options/savefromgrid'
         ,paging: true
         ,remoteSort: true
         ,autoHeight: true
-        //,save_action: '/options/getOptions'
         ,autosave: true
-        ,columns: [{
-            header: _('title')
-            ,dataIndex: 'key'
-            ,width: 100
-            ,editor: {xtype: 'textfield', allowBlank: false}
-        },{
-            header: _('value')
-            ,dataIndex: 'value'
-            ,width: 100
-            ,editor: {xtype: 'textfield', allowBlank: false}
-        }]
 
-    })
-    SEManager.grid.Options.superclass.constructor.call(this,config)
+    });
+    SEManager.grid.Options.superclass.constructor.call(this,config);
+
 };
 
-Ext.extend(SEManager.grid.Options,MODx.grid.Grid);
-Ext.reg('semanager-tab-options',SEManager.grid.Options);
+Ext.extend(SEManager.grid.Options, MODx.grid.Grid, {
+
+});
+
+Ext.reg('semanager-grid-options', SEManager.grid.Options);

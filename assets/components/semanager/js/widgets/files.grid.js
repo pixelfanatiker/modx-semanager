@@ -157,10 +157,10 @@ SEManager.grid.Files = function(config) {
             ,dataIndex: 'mediasource'
             ,width: 30
             ,sortable: false
-            ,editable: false
+            ,editable: true
             //,renderer: { fn: this.getMediaSource ,scope:this }
-            ,renderer: this.renderDynField.createDelegate(this,[this],true)
-            //,editor:{ xtype: 'combo', renderer: true}
+            //,renderer: this.renderDynField.createDelegate(this,[this],true)
+            ,editor:{ xtype: 'combo', renderer: true}
         },{
             header: _('path')
             ,dataIndex: 'path'
@@ -254,7 +254,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
         var f,idx;
         var oz = v;
         var xtype = this.config.dynProperty;
-        if (!r[xtype] || r[xtype] == 'combo') {
+        if (!r[xtype] || r[xtype] == 'combo-boolean') {
             f = MODx.grid.Grid.prototype.rendYesNo;
             oz = f(v == 1,md);
         } else if (r[xtype] === 'datefield') {
@@ -268,7 +268,7 @@ Ext.extend(SEManager.grid.Files, MODx.grid.Grid, {
             var ed = cm.getCellEditor(ci,ri);
             var cb;
             if (!ed) {
-                r.xtype = r.xtype || 'combo';
+                r.xtype = r.xtype || 'combo-boolean';
                 cb = this.createCombo(r);
                 ed = new Ext.grid.GridEditor(cb);
                 cm.setEditor(ci,ed);

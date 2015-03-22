@@ -55,11 +55,9 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor {
 
         $data['results'] = $this->modx->getCollection($this->classKey, $c);
         $data['results'] = $this->checkElementIfIsChanged($data['results']);
+        $data['results'] = $this->addMediaSourceName($data['results']);
 
-        foreach ($data['results'] as $result) {
-            $resultItem = $result->toArray();
-            //$this->modx->log(xPDO::LOG_LEVEL_ERROR,'[se manager] [getData] : ' . print_r($resultItem, true));
-        }
+
         return $data;
     }
 
@@ -69,6 +67,27 @@ class modSEManagerGetListOfElementsProcessor extends modObjectGetListProcessor {
      */
     public function prepareRow(xPDOObject $object) {
         return $object->toArray();
+    }
+
+
+    /**
+     * @param $results
+     * @return mixed
+     */
+    public function addMediaSourceName ($results) {
+
+        foreach ($results as $result) {
+            $source = $result->get("source");
+            $mediaSource = $this->modx->getObject('sources.modMediaSource', $source);
+            if(!empty($mediaSource) && is_object($mediaSource)) {
+                $mediaSourceName = $mediaSource->get("name");
+            } else {
+                $mediaSourceName = "None";
+            }
+            $result->set("mediasource", $mediaSourceName);
+            $this->modx->log(xPDO::LOG_LEVEL_ERROR, "mediasource: ".$mediaSourceName);
+        }
+        return $results;
     }
 
     /**

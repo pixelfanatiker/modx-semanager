@@ -95,6 +95,12 @@ SEManager.grid.Elements = function(config) {
             ,sortable: true
             ,sortDir: 'ASC'
         },{
+            header: _('source')
+            ,dataIndex: 'mediasource'
+            ,width: 30
+            ,sortable: false
+            ,editable: false
+        },{
             header: _('semanager.elements.file')
             ,dataIndex: 'static_file'
             ,sortable: false
@@ -137,7 +143,7 @@ SEManager.grid.Elements = function(config) {
 
     Ext.applyIf(config,{
          cm: this.cm
-        ,fields: ['id', 'status', 'actions', 'name', 'static','static_file', 'description','category','snippet','plugincode','templatename','content','disabled']
+        ,fields: ['id', 'status', 'actions', 'name', 'static','static_file','source','mediasource','description','category','snippet','plugincode','templatename','content','disabled']
         ,id: 'semanager-grid-elements-' + config.type + 's'
         ,url: SEManager.config.connectorUrl
         ,baseParams: {
@@ -447,6 +453,25 @@ Ext.extend(SEManager.grid.Elements, MODx.grid.Grid, {
             }
         });
         return true;
+    }
+
+    ,getMediaSource: function (event) {
+        var sourceName = "None";
+        MODx.Ajax.request({
+             url: this.config.url
+            ,params: {
+                 action: 'common/getmediasource'
+                ,id: event
+            }
+            ,listeners: {
+                'success': {fn:function(response) {
+                    sourceName = response.message;
+                    console.log("sourceName: "+sourceName);
+
+                } ,scope:this }
+            }
+        });
+        return sourceName;
     }
 
 });

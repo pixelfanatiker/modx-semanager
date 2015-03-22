@@ -10,12 +10,9 @@ if (!$modx->hasPermission('view')) {
     return $this->failure($modx->lexicon('semanager.no_permission'));
 }
 
+$path = $scriptProperties['path'];
+$category = $scriptProperties['category'];
 
-$path = $scriptProperties["path"];
-$category = $scriptProperties["category"];
+$newElement = $modx->semanager->createNewSingleElement($path, $category);
 
-$modx->log(xPDO::LOG_LEVEL_DEBUG, "path:".$path);
-
-//$newElem = $modx->semanager->createNewSingleElement($path, $category);
-
-return $modx->error->success($newElem);
+return $modx->error->success($newElement);
